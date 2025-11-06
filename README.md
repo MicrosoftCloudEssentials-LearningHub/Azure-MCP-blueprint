@@ -9,12 +9,13 @@ Last updated: 2025-11-03
 
 ----------
 
+> MCP is about `structured behavior, access control, and responsibilities` from the AI’s perspective, and we expose it (often via HTTP) using whatever hosting option fits best.
+
 > [!TIP]
 > You can think of MCP as:
 > - **A universal API contract for AI agents.**  
 > - **A permissions framework** (AI can only do what’s declared).  
 > - **A deployment‑agnostic service** (you choose where/how to host it).
-> `MCP is about **structured behavior, access control, and responsibilities** from the AI’s perspective, and we expose it (often via HTTP) using whatever hosting option fits best.`
 
 ## What MCP Really Is?
 > **MCP (Model Context Protocol)** is a **structured contract** between an AI client (like Copilot Studio or Azure AI Foundry) and an external service (your MCP server).
@@ -27,14 +28,14 @@ It defines:
   - **What prompts are predefined** (templates the AI can use).  
 
 > [!TIP]
-> Like a **set of rules and responsibilities** that tell the AI: `Here’s what you’re allowed to do, here’s how you call it, and here’s what you’ll get back.`
+> Like a **set of rules and responsibilities** that tell the AI: `"Here’s what you’re allowed to do, here’s how you call it, and here’s what you’ll get back"`
 
 ## Rights & Responsibilities
 
 > From the AI’s perspective:
 - **Rights:** It can only call the tools/resources the MCP server advertises.  
 - **Responsibilities:** It must respect the input/output schema and handle errors gracefully.  
-- **Boundaries:** The AI cannot “invent” new tools — it only uses what the MCP server exposes.  
+- **Boundaries:** The AI cannot `“invent”` new tools, it only uses what the MCP server exposes.  
 
 > From developer perspective (as the server owner):
 - You decide **what to expose** (e.g., `getCustomerOrders`, `createInvoice`).  
