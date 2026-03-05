@@ -1,8 +1,17 @@
 # Microsoft Copilot Studio Integration with MCP Server
 
-## Overview
+Costa Rica
 
-Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access. Perfect for business users and citizen developers.
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-05
+
+----------
+> Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access.
+
+## Overview
+Perfect for business users and citizen developers.
 
 ## What You'll Build
 
@@ -19,13 +28,17 @@ Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code A
 
 ## Quick Start
 
-### Step 1: Access Copilot Studio
+<details>
+<summary><strong>Step 1: Access Copilot Studio</strong></summary>
 
 1. Navigate to [Copilot Studio](https://copilotstudio.microsoft.com/)
 2. Sign in with your Microsoft account
 3. Select your environment (or create new)
 
-### Step 2: Create New Copilot
+</details>
+
+<details>
+<summary><strong>Step 2: Create New Copilot</strong></summary>
 
 1. Click **Create** → **New Copilot**
 2. Choose **From Blank**
@@ -35,7 +48,10 @@ Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code A
    - **Language**: English
 4. Click **Create**
 
-### Step 3: Add MCP Server as Action
+</details>
+
+<details>
+<summary><strong>Step 3: Add MCP Server as Action</strong></summary>
 
 #### Option A: OpenAPI Connector (Recommended)
 
@@ -147,7 +163,10 @@ Response: Return to Copilot
 
 4. **Save and publish flow**
 
-### Step 4: Configure Topics with MCP Tools
+</details>
+
+<details>
+<summary><strong>Step 4: Configure Topics with MCP Tools</strong></summary>
 
 #### Example: Healthcare Patient Lookup
 
@@ -193,7 +212,10 @@ Node 5: Question - Follow-up
 5. **Save topic**
 6. **Test in Test Copilot pane**
 
-### Step 5: Industry-Specific Topics
+</details>
+
+<details>
+<summary><strong>Step 5: Industry-Specific Topics</strong></summary>
 
 #### Healthcare Topics
 
@@ -225,7 +247,10 @@ Node 5: Question - Follow-up
 - Trigger: "Check for suspicious activity"
 - Action: `cosmos_query_items` → filter by fraud score > 0.7
 
-### Step 6: Add Generative Answers
+</details>
+
+<details>
+<summary><strong>Step 6: Add Generative Answers</strong></summary>
 
 Enable generative responses powered by MCP data:
 
@@ -257,7 +282,10 @@ When users ask questions:
 Always maintain data privacy and security.
 ```
 
-### Step 7: Test Your Copilot
+</details>
+
+<details>
+<summary><strong>Step 7: Test Your Copilot</strong></summary>
 
 1. Click **Test your copilot** (top right)
 2. Try example queries:
@@ -267,7 +295,10 @@ Always maintain data privacy and security.
 
 3. Verify MCP tool calls in **Test** pane
 
-### Step 8: Publish
+</details>
+
+<details>
+<summary><strong>Step 8: Publish</strong></summary>
 
 #### Publish to Demo Website
 
@@ -323,9 +354,12 @@ Always maintain data privacy and security.
 </html>
 ```
 
+</details>
+
 ## Advanced Features
 
-### Authentication & Security
+<details>
+<summary><strong>Authentication & Security</strong></summary>
 
 #### Azure AD Authentication
 
@@ -347,7 +381,10 @@ def get_user_data(user_id: str, query: str):
     return cosmos_client.query(scoped_query)
 ```
 
-### Analytics & Monitoring
+</details>
+
+<details>
+<summary><strong>Analytics & Monitoring</strong></summary>
 
 1. Go to **Analytics** tab
 2. View metrics:
@@ -358,7 +395,10 @@ def get_user_data(user_id: str, query: str):
 
 3. Export logs for analysis
 
-### Multi-Language Support
+</details>
+
+<details>
+<summary><strong>Multi-Language Support</strong></summary>
 
 1. **Settings** → **Languages**
 2. Add languages:
@@ -367,9 +407,12 @@ def get_user_data(user_id: str, query: str):
    - German
 3. MCP server returns localized results
 
+</details>
+
 ## Industry Templates
 
-### Healthcare Copilot
+<details>
+<summary><strong>Healthcare Copilot</strong></summary>
 
 **Topics:**
 1. Patient Lookup
@@ -395,7 +438,10 @@ Copilot: [Calls cosmos_query_items]
         - Aspirin 81mg - Once daily
 ```
 
-### Retail Copilot
+</details>
+
+<details>
+<summary><strong>Retail Copilot</strong></summary>
 
 **Topics:**
 1. Product Search
@@ -404,7 +450,10 @@ Copilot: [Calls cosmos_query_items]
 4. Loyalty Points
 5. Recommendations
 
-### Finance Copilot
+</details>
+
+<details>
+<summary><strong>Finance Copilot</strong></summary>
 
 **Topics:**
 1. Account Balance
@@ -412,6 +461,8 @@ Copilot: [Calls cosmos_query_items]
 3. Fraud Alerts
 4. Payment Processing
 5. Financial Insights
+
+</details>
 
 ## Best Practices
 
@@ -423,7 +474,8 @@ Copilot: [Calls cosmos_query_items]
 
 ## Troubleshooting
 
-### MCP Connector Issues
+<details>
+<summary><strong>MCP Connector Issues</strong></summary>
 
 **Problem**: Connector fails to connect
 
@@ -432,7 +484,10 @@ Copilot: [Calls cosmos_query_items]
 - Check CORS settings on MCP server
 - Test endpoint with Postman first
 
-### Tool Call Failures
+</details>
+
+<details>
+<summary><strong>Tool Call Failures</strong></summary>
 
 **Problem**: Tool returns error
 
@@ -440,6 +495,8 @@ Copilot: [Calls cosmos_query_items]
 - Validate argument schema
 - Check MCP server logs
 - Verify Azure service connectivity
+
+</details>
 
 ## Sample Copilot Export
 
@@ -453,3 +510,10 @@ See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
 - [Custom App Integration](./custom-app-integration.md)
 - [Azure AI Foundry Integration](./azure-ai-foundry-integration.md)
 - [Pre-built Agent Samples](../../agent-samples/README.md)
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

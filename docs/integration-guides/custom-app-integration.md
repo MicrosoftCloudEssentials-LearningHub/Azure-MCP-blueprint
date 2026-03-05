@@ -1,8 +1,17 @@
 # Custom Application Integration with MCP Server
 
-## Overview
+Costa Rica
 
-This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK. Perfect for building AI-powered applications with direct MCP tool access.
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-05
+
+----------
+> This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK.
+
+## Overview
+Perfect for building AI-powered applications with direct MCP tool access.
 
 ## Prerequisites
 
@@ -12,13 +21,17 @@ This guide shows developers how to integrate the Azure MCP Server into custom ap
 
 ## Quick Start (Python)
 
-### 1. Install MCP SDK
+<details>
+<summary><strong>1. Install MCP SDK</strong></summary>
 
 ```bash
 pip install mcp anthropic
 ```
 
-### 2. Basic MCP Client
+</details>
+
+<details>
+<summary><strong>2. Basic MCP Client</strong></summary>
 
 ```python
 import asyncio
@@ -111,9 +124,12 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+</details>
+
 ## Advanced Integration Examples
 
-### Building a Custom AI Agent
+<details>
+<summary><strong>Building a Custom AI Agent</strong></summary>
 
 ```python
 import os
@@ -211,7 +227,10 @@ async def run_agent():
 asyncio.run(run_agent())
 ```
 
-### Flask/FastAPI Integration
+</details>
+
+<details>
+<summary><strong>Flask/FastAPI Integration</strong></summary>
 
 ```python
 from fastapi import FastAPI, HTTPException
@@ -268,6 +287,8 @@ async def health():
         "mcp_server": mcp_health
     }
 ```
+
+</details>
 
 ## Node.js/TypeScript Integration
 
@@ -330,7 +351,8 @@ main();
 
 ## Authentication Options
 
-### 1. Azure Managed Identity (Recommended)
+<details>
+<summary><strong>1. Azure Managed Identity (Recommended)</strong></summary>
 
 ```python
 from azure.identity import DefaultAzureCredential
@@ -342,7 +364,10 @@ class SecureMCPClient(MCPClient):
         super().__init__(mcp_endpoint, api_key=token.token)
 ```
 
-### 2. API Key Authentication
+</details>
+
+<details>
+<summary><strong>2. API Key Authentication</strong></summary>
 
 ```python
 # Set in environment variable
@@ -355,7 +380,10 @@ mcp = MCPClient(
 )
 ```
 
-### 3. OAuth 2.0 Flow
+</details>
+
+<details>
+<summary><strong>3. OAuth 2.0 Flow</strong></summary>
 
 ```python
 from msal import ConfidentialClientApplication
@@ -370,6 +398,8 @@ class OAuthMCPClient(MCPClient):
         result = app.acquire_token_for_client(scopes=["api://your-mcp/.default"])
         super().__init__(mcp_endpoint, api_key=result['access_token'])
 ```
+
+</details>
 
 ## Error Handling
 
@@ -422,3 +452,10 @@ See [`/agent-samples`](../../agent-samples) directory for complete examples:
 - [Azure AI Foundry Integration](./azure-ai-foundry-integration.md)
 - [Copilot Studio Integration](./copilot-studio-integration.md)
 - [Pre-built Agent Samples](../../agent-samples/README.md)
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

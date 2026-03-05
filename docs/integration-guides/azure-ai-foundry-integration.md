@@ -1,8 +1,17 @@
 # Azure AI Foundry Integration with MCP Server
 
-## Overview
+Costa Rica
 
-This guide demonstrates how to integrate your MCP Server with Azure AI Foundry to build sophisticated multi-agent AI applications. Includes model routing, agent orchestration, and agentic workflows.
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-05
+
+----------
+> This guide demonstrates how to integrate your MCP Server with Azure AI Foundry to build sophisticated multi-agent AI applications.
+
+## Overview
+Includes model routing, agent orchestration, and agentic workflows.
 
 ## Architecture Pattern
 
@@ -27,13 +36,17 @@ User Request → Intent Router → Specialized Agents → MCP Tools → Azure Se
 
 ## Quick Start
 
-### 1. Install Azure AI SDK
+<details>
+<summary><strong>1. Install Azure AI SDK</strong></summary>
 
 ```bash
 pip install azure-ai-projects azure-ai-agents azure-identity
 ```
 
-### 2. Create Multi-Agent System
+</details>
+
+<details>
+<summary><strong>2. Create Multi-Agent System</strong></summary>
 
 ```python
 import os
@@ -351,9 +364,12 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+</details>
+
 ## Industry-Specific Multi-Agent Setups
 
-### Healthcare Example
+<details>
+<summary><strong>Healthcare Example</strong></summary>
 
 ```python
 # Create healthcare agent team
@@ -388,7 +404,10 @@ agents = {
 }
 ```
 
-### Retail Example
+</details>
+
+<details>
+<summary><strong>Retail Example</strong></summary>
 
 ```python
 # Create retail agent team
@@ -422,6 +441,8 @@ agents = {
     )
 }
 ```
+
+</details>
 
 ## Model Router Pattern
 
@@ -469,7 +490,8 @@ class ModelRouter:
 
 ## Deployment to Azure
 
-### 1. Create Azure AI Foundry Project
+<details>
+<summary><strong>1. Create Azure AI Foundry Project</strong></summary>
 
 ```bash
 # Using Azure CLI
@@ -485,7 +507,10 @@ az ml workspace update \
     --enable-agents true
 ```
 
-### 2. Deploy Models
+</details>
+
+<details>
+<summary><strong>2. Deploy Models</strong></summary>
 
 ```bash
 # Deploy GPT-4o
@@ -501,7 +526,10 @@ az ml online-deployment create \
     --resource-group my-rg
 ```
 
-### 3. Configure MCP Connection
+</details>
+
+<details>
+<summary><strong>3. Configure MCP Connection</strong></summary>
 
 ```python
 # Store MCP endpoint in Azure Key Vault
@@ -514,6 +542,8 @@ kv_client = SecretClient(
 
 kv_client.set_secret("MCP-Endpoint", "https://your-mcp.azurecontainerapps.io")
 ```
+
+</details>
 
 ## Best Practices
 
@@ -533,3 +563,10 @@ See [`/agent-samples/healthcare-multi-agent/`](../../agent-samples/healthcare-mu
 - [Copilot Studio Integration](./copilot-studio-integration.md)
 - [Pre-built Agent Samples](../../agent-samples/README.md)
 - [Custom App Integration](./custom-app-integration.md)
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

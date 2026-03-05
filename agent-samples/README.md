@@ -1,83 +1,104 @@
 # Pre-Built AI Agent Samples
 
-## Overview
+Costa Rica
 
-Production-ready AI agent implementations using MCP Server with multi-agent routing and model optimization patterns.
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
 
-Inspired by: [Agentic-DevOps-AI-Shopping](https://github.com/MicrosoftCloudEssentials-LearningHub/Agentic-DevOps-AI-Shopping)
+Last updated: 2026-03-05
 
-## Available Samples
+----------
+> Reference AI agent samples that use this repo's MCP Server over HTTP.
+
+<details>
+<summary><strong>List of References</strong></summary>
+
+- [Blueprint Overview](../README.md)
+- [Deployment & Configuration](../docs/deployment-and-configuration.md)
+- Integration guides:
+    - [Azure AI Foundry](../docs/integration-guides/azure-ai-foundry-integration.md)
+    - [Microsoft Copilot Studio](../docs/integration-guides/copilot-studio-integration.md)
+    - [Custom App](../docs/integration-guides/custom-app-integration.md)
+- [MCP HTTP Client (Sample)](../samples/mcp-http-client/)
+
+</details>
+
+<details>
+<summary><strong>Table of Content</strong></summary>
 
 | Sample | Industry | Agents | Complexity |
 |--------|----------|---------|------------|
 | [Healthcare Multi-Agent](./healthcare-multi-agent/) | Healthcare | 5 | Advanced |
 | [Simple Query Agent](./simple-query-agent/) | Any | 1 | Beginner |
+| [Retail Shopping Assistant](./retail-shopping-assistant/) | Retail | 6 | Intermediate |
+| [Financial Advisor](./financial-advisor/) | Finance | 4 | Intermediate |
+| [Manufacturing Monitor](./manufacturing-monitor/) | Manufacturing | 3 | Intermediate |
+| [Education Student Assistant](./education-student-assistant/) | Education | 3 | Intermediate |
+| [Logistics Tracker](./logistics-tracker/) | Logistics | 3 | Intermediate |
+| [Insurance Claims Agent](./insurance-claims-agent/) | Insurance | 4 | Intermediate |
+| [Hospitality Concierge](./hospitality-concierge/) | Hospitality | 3 | Intermediate |
+| [Energy Usage Advisor](./energy-usage-advisor/) | Energy | 3 | Intermediate |
+| [Real Estate Portfolio Manager](./realestate-portfolio-manager/) | Real Estate | 3 | Intermediate |
 
-Planned (not included in this repo snapshot yet):
-- Retail Shopping Assistant
-- Financial Advisor
-- Manufacturing Monitor
+</details>
 
-## Architecture Pattern
+- `healthcare-multi-agent`: an advanced orchestrated multi-agent sample.
+- The other industry samples: lightweight CLIs that (a) route to a role and (b) run a search tool via MCP, optionally using `openai_chat_completion` for routing and summaries when available.
 
-All samples implement the **Model Router + Multi-Agent** pattern:
+<details>
+<summary><strong>Patterns</strong></summary>
+
+<details>
+<summary><strong>Lightweight HTTP samples (most folders)</strong></summary>
 
 ```
-User Request
+User
     ↓
-Intent Router (gpt-4o-mini) ← Fast, cheap classification
+(optional) openai_chat_completion  → role routing
     ↓
-Handoff Planner
+search_semantic / search_documents → retrieve relevant items
     ↓
-┌─────────────────────────────┐
-│   Agent 1 (Specialized)     │ → MCP Tools → Azure Services
-│   Model: gpt-4o-mini/gpt-4o │
-└─────────────────────────────┘
-    ↓ (Handoff)
-┌─────────────────────────────┐
-│   Agent 2 (Specialized)     │ → MCP Tools → Azure Services
-│   Model: gpt-4o-mini/gpt-4o │
-└─────────────────────────────┘
-    ↓
-Result Aggregator (gpt-4o-mini)
-    ↓
-Final Response
+(optional) openai_chat_completion  → concise summary
 ```
 
-## Key Features
+</details>
 
-- **Model Router**: Automatically selects optimal model (gpt-4o vs gpt-4o-mini)
-- **Agent Specialization**: Domain-specific agents with targeted tools
-- **Intent Classification**: Routes requests to correct agent sequence
-- **Handoff Planning**: Multi-step workflows across agents
-- **MCP Integration**: Direct Azure service access via MCP tools
-- **Cost Optimization**: Uses gpt-4o-mini where possible
-- **Production-Ready**: Error handling, logging, monitoring
+<details>
+<summary><strong>Advanced orchestration (healthcare-multi-agent)</strong></summary>
 
-## Quick Start
+The healthcare sample demonstrates a richer orchestrator and multi-agent handoffs.
+
+</details>
+
+</details>
+
+<details>
+<summary><strong>Key Features</strong></summary>
+
+- **MCP HTTP integration**: Calls `/health`, `/mcp/tools`, and `/mcp/execute`
+- **Optional LLM routing**: Uses `openai_chat_completion` when the server exposes it
+- **Search-first flow**: Uses `search_semantic` (preferred) or `search_documents`
+- **Minimal dependencies**: `requests` + `python-dotenv`
+
+</details>
+
+<details>
+<summary><strong>Quick Start</strong></summary>
 
 ```bash
-# Clone repository
-git clone https://github.com/your-repo/Azure-MCP-blueprint.git
-cd agent-samples
-
-# Choose a sample
-cd healthcare-multi-agent
-
-# Install dependencies
+cd agent-samples/retail-shopping-assistant
 pip install -r requirements.txt
-
-# Configure environment
 cp .env.example .env
-# Edit .env with your MCP endpoint and Azure credentials
-
-# Run agent
-python main.py
+python main.py --demo
 ```
 
-## Sample Walkthroughs
+</details>
 
-### 1. Healthcare Multi-Agent
+<details>
+<summary><strong>Sample Walkthroughs</strong></summary>
+
+<details>
+<summary><strong>1. Healthcare Multi-Agent</strong></summary>
 
 **Scenario**: Medical records management with compliance checks
 
@@ -110,7 +131,10 @@ User: "Find all diabetic patients with recent lab results and generate a clinica
   Output: Comprehensive report
 ```
 
-### 2. Retail Shopping Assistant
+</details>
+
+<details>
+<summary><strong>2. Retail Shopping Assistant</strong></summary>
 
 **Agents:**
 1. **Cora** (Shopper Agent) - General queries
@@ -123,19 +147,17 @@ User: "Find all diabetic patients with recent lab results and generate a clinica
 **Model Router Logic:**
 
 ```python
-class ModelRouter:
     def select_model(self, agent_role: str, task_complexity: str) -> str:
         routing_rules = {
             ("triage", "simple"): "gpt-4o-mini",
-            ("product_search", "simple"): "gpt-4o-mini",
-            ("recommendations", "complex"): "gpt-4o",
-            ("comparison", "complex"): "gpt-4o",
-            ("aggregation", "any"): "gpt-4o-mini"
         }
         return routing_rules.get((agent_role, task_complexity), "gpt-4o-mini")
 ```
 
-### 3. Financial Advisor
+</details>
+
+<details>
+<summary><strong>3. Financial Advisor</strong></summary>
 
 **Agents:**
 1. **Account Manager** - Account inquiries
@@ -155,9 +177,15 @@ query = "Show me high-risk transactions and suggest protective measures"
   3. AccountManager: Present results with action items
 ```
 
-## Implementation Deep Dive
+</details>
 
-### Model Router Implementation
+</details>
+
+<details>
+<summary><strong>Implementation Deep Dive</strong></summary>
+
+<details>
+<summary><strong>Model Router Implementation</strong></summary>
 
 ```python
 # agent-samples/common/model_router.py
@@ -250,7 +278,10 @@ class IntelligentModelRouter:
         return "simple"
 ```
 
-### Intent Router Implementation
+</details>
+
+<details>
+<summary><strong>Intent Router Implementation</strong></summary>
 
 ```python
 # agent-samples/common/intent_router.py
@@ -316,7 +347,10 @@ Respond in JSON format:
         return json.loads(response.choices[0].message.content)
 ```
 
-### Agent Orchestrator
+</details>
+
+<details>
+<summary><strong>Agent Orchestrator</strong></summary>
 
 ```python
 # agent-samples/common/orchestrator.py
@@ -413,9 +447,15 @@ class MultiAgentOrchestrator:
         pass
 ```
 
-## Running the Samples
+</details>
 
-### Healthcare Multi-Agent
+</details>
+
+<details>
+<summary><strong>Running the Samples</strong></summary>
+
+<details>
+<summary><strong>Healthcare Multi-Agent</strong></summary>
 
 ```bash
 cd agent-samples/healthcare-multi-agent
@@ -427,7 +467,10 @@ python main.py
 # "List patients admitted in last 30 days"
 ```
 
-### Retail Shopping Assistant
+</details>
+
+<details>
+<summary><strong>Retail Shopping Assistant</strong></summary>
 
 ```bash
 cd agent-samples/retail-shopping-assistant
@@ -439,14 +482,22 @@ python main.py
 # "Check my loyalty points and cart"
 ```
 
-## Customization Guide
+</details>
+
+</details>
+
+<details>
+<summary><strong>Customization Guide</strong></summary>
 
 1. **Add New Industry**: Copy sample, modify agent definitions
 2. **Adjust Model Routing**: Edit `model_router.py` complexity rules
 3. **Add Agents**: Extend agent registry with new specialists
 4. **Change MCP Tools**: Update agent tool permissions
 
-## Cost Optimization
+</details>
+
+<details>
+<summary><strong>Cost Optimization</strong></summary>
 
 | Component | Model | Reason |
 |-----------|-------|--------|
@@ -458,9 +509,21 @@ python main.py
 
 **Estimated Cost per Query**: $0.002 - $0.02 (depending on complexity)
 
-## Next Steps
+</details>
+
+<details>
+<summary><strong>Next Steps</strong></summary>
 
 - Explore individual sample READMEs
 - [Custom App Integration](../docs/integration-guides/custom-app-integration.md)
 - [Azure AI Foundry Integration](../docs/integration-guides/azure-ai-foundry-integration.md)
 - [Copilot Studio Integration](../docs/integration-guides/copilot-studio-integration.md)
+
+</details>
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

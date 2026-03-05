@@ -1,4 +1,4 @@
-# Simple Query Agent
+# Education Student Assistant
 
 Costa Rica
 
@@ -8,25 +8,26 @@ Costa Rica
 Last updated: 2026-03-05
 
 ----------
-> Beginner-friendly sample that calls MCP tools over HTTP.
+
+> Education-focused sample agent that calls MCP tools over HTTP.
+
+It works best when Azure AI Search is enabled (uses `search_semantic` / `search_documents`). If Azure OpenAI is enabled on the MCP server, it will also use `openai_chat_completion` for routing/summaries.
 
 ## Setup
 
 ```bash
-cd agent-samples/simple-query-agent
+cd agent-samples/education-student-assistant
 pip install -r requirements.txt
 cp .env.example .env
 ```
 
 Set `MCP_ENDPOINT` in `.env`.
 
-## Run
-
 ```bash
-python main.py
+python main.py --demo
 ```
 
-Interactive mode:
+Interactive:
 
 ```bash
 python main.py --interactive

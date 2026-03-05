@@ -1,6 +1,14 @@
 # MCP Blueprint (Azure) — Deployment & Configuration Best Practices
 
-This blueprint supports running the MCP server in multiple ways. The goal is to keep **one configuration contract** (env vars + secrets) and make **deployment choice** an implementation detail.
+Costa Rica
+
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-05
+
+----------
+> This blueprint supports running the MCP server in multiple ways.
 
 ## What this repo deploys
 
@@ -11,13 +19,17 @@ This blueprint supports running the MCP server in multiple ways. The goal is to 
 
 ## Standard configuration contract (env vars)
 
-### Required (any deployment)
+<details>
+<summary><strong>Required (any deployment)</strong></summary>
 
 - `PORT`
   - Container Apps / App Service: typically `8000`
   - Functions: typically `80` (fronted by Functions runtime)
 
-### Data + Search (when enabled)
+</details>
+
+<details>
+<summary><strong>Data + Search (when enabled)</strong></summary>
 
 - `COSMOS_ENDPOINT`
 - `COSMOS_KEY` *(optional)*
@@ -32,7 +44,10 @@ This blueprint supports running the MCP server in multiple ways. The goal is to 
   - If not set, the server uses **Managed Identity / DefaultAzureCredential**.
 - `SEARCH_INDEX_NAME`
 
-### Azure OpenAI / “Foundry” (when enabled)
+</details>
+
+<details>
+<summary><strong>Azure OpenAI / “Foundry” (when enabled)</strong></summary>
 
 This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
 
@@ -41,11 +56,16 @@ This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
   - If set and not equal to `managed_identity`, the server uses **key-based** auth.
   - Otherwise, the server uses **Managed Identity / DefaultAzureCredential** (AAD token provider).
 
-### Common
+</details>
+
+<details>
+<summary><strong>Common</strong></summary>
 
 - `AZURE_KEY_VAULT_URI` (recommended in Azure)
 - `APPLICATIONINSIGHTS_CONNECTION_STRING` (recommended)
 - `SELECTED_INDUSTRY` (used to keep infra + data consistent)
+
+</details>
 
 ## Secrets best practices
 
@@ -62,7 +82,8 @@ This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
 
 ## Deployment options
 
-### Option A (recommended): Terraform + Azure Container Apps (zero-touch)
+<details>
+<summary><strong>Option A (recommended): Terraform + Azure Container Apps (zero-touch)</strong></summary>
 
 This is the only path in this repo that is currently **end-to-end automated** via Terraform.
 
@@ -79,7 +100,10 @@ Notes:
 - The container image is built in Azure using **ACR Tasks** (`az acr build`).
 - The Container App is configured with Key Vault-backed secrets.
 
-### Option B: Terraform provisions infra, then deploy code separately (Functions)
+</details>
+
+<details>
+<summary><strong>Option B: Terraform provisions infra, then deploy code separately (Functions)</strong></summary>
 
 Terraform can provision the Function App + Key Vault + dependent services, but code deployment is best done via CI/CD (or your preferred release process).
 
@@ -88,10 +112,15 @@ Terraform can provision the Function App + Key Vault + dependent services, but c
   - GitHub Actions / Azure DevOps (recommended)
   - Manual publish (requires Azure Functions Core Tools): `func azure functionapp publish <name> --python`
 
-### Option C: Terraform provisions infra, then deploy code separately (App Service)
+</details>
+
+<details>
+<summary><strong>Option C: Terraform provisions infra, then deploy code separately (App Service)</strong></summary>
 
 - Set `mcp_deployment_type = "app-service"` in `terraform.tfvars`.
 - Deploy code using CI/CD or your chosen packaging method.
+
+</details>
 
 ## Data modeling & Cosmos DB best practices (when using Cosmos)
 
@@ -118,3 +147,10 @@ You can also run the built-in validator:
 - **Hard-coded Cosmos/Search names** → Terraform + server now read these from the selected industry template and env vars.
 - **Key vs Managed Identity mismatch** → server supports both, based on presence of key env vars.
 - **"Supports Functions/App Service" but breaks at apply time** → Terraform automation is scoped to Container Apps; other options are provision-only unless you add a deployment pipeline.
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

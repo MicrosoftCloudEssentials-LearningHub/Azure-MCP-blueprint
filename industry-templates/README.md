@@ -5,7 +5,7 @@ Costa Rica
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2025-12-03
+Last updated: 2026-03-05
 
 ----------
 
@@ -19,7 +19,8 @@ Last updated: 2025-12-03
 
 ## Available Templates
 
-### Healthcare
+<details>
+<summary><strong>Healthcare</strong></summary>
 
 - **File**: `healthcare/`
 - **Use Case**: Medical records management, patient care coordination, clinical research
@@ -41,8 +42,10 @@ Last updated: 2025-12-03
 - Semantic search for medical conditions
 - AI-assisted medical summaries
 
+</details>
 
-### Retail & E-Commerce
+<details>
+<summary><strong>Retail & E-Commerce</strong></summary>
 
 - **File**: `retail/`
 - **Use Case**: Transaction analytics, customer insights, inventory management
@@ -64,15 +67,16 @@ Last updated: 2025-12-03
 - Seasonal/promotional campaign effectiveness
 - Loyalty program member identification
 
+</details>
 
-### Financial Services
+<details>
+<summary><strong>Financial Services</strong></summary>
 
 - **File**: `finance/`
 - **Use Case**: Transaction monitoring, fraud detection, account management
 - **Partition Key**: `/accountId`
 - **Cosmos DB Container**: `transactions`  
 - **Search Index**: `finance-index`
-
 
 **Data Schema**:
 - Transaction details (type, amount, timestamp)
@@ -87,6 +91,8 @@ Last updated: 2025-12-03
 - International transaction monitoring
 - Spending pattern analysis by category
 - AI-powered financial advice generation
+
+</details>
 
 <!-- START BADGE -->
 <div align="center">

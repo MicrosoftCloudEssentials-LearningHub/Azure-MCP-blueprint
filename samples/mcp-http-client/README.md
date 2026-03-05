@@ -1,6 +1,14 @@
 # MCP HTTP Client (Sample)
 
-Minimal Python client for calling the MCP server endpoints exposed by this blueprint.
+Costa Rica
+
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-05
+
+----------
+> Minimal Python client for calling the MCP server endpoints exposed by this blueprint.
 
 ## Setup
 
@@ -25,3 +33,10 @@ python client.py \
   --tool cosmos_query_items \
   --args '{"query":"SELECT * FROM c OFFSET 0 LIMIT 1"}'
 ```
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->
