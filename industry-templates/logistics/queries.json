@@ -1,0 +1,116 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Delayed shipments",
+      "description": "Find all shipments currently delayed",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'Delayed'",
+        "top": 100
+      },
+      "expected_use_case": "Operations monitoring and customer service alerts"
+    },
+    {
+      "id": 2,
+      "title": "High-value shipments in transit",
+      "description": "Track shipments with value over $10,000",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.value > 10000 AND c.status = 'In Transit'"
+      },
+      "expected_use_case": "High-value cargo monitoring and risk management"
+    },
+    {
+      "id": 3,
+      "title": "Customs clearance pending",
+      "description": "Find shipments stuck in customs",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "customsClearance eq 'Pending'",
+        "top": 50
+      },
+      "expected_use_case": "International shipping coordination"
+    },
+    {
+      "id": 4,
+      "title": "Semantic search for delay reasons",
+      "description": "AI-powered search for specific delay patterns",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "weather delay storm hurricane",
+        "top": 30
+      },
+      "expected_use_case": "Root cause analysis of delivery delays"
+    },
+    {
+      "id": 5,
+      "title": "Priority overnight shipments",
+      "description": "Track all overnight priority deliveries",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "priority eq 'Overnight'",
+        "top": 75
+      },
+      "expected_use_case": "Critical shipment monitoring"
+    },
+    {
+      "id": 6,
+      "title": "Temperature-controlled cargo",
+      "description": "Find all refrigerated/climate-controlled shipments",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.temperatureControlled = true"
+      },
+      "expected_use_case": "Pharmaceutical and perishable goods tracking"
+    },
+    {
+      "id": 7,
+      "title": "Shipments by carrier",
+      "description": "Query all FedEx shipments",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "carrier eq 'FedEx'",
+        "top": 100
+      },
+      "expected_use_case": "Carrier performance analytics"
+    },
+    {
+      "id": 8,
+      "title": "Hazardous materials shipments",
+      "description": "Track shipments containing hazardous materials",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.hazardousMaterials = true"
+      },
+      "expected_use_case": "Regulatory compliance and safety monitoring"
+    },
+    {
+      "id": 9,
+      "title": "AI route optimization",
+      "description": "Generate intelligent delivery route recommendations",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are a logistics optimization AI. Analyze shipment data and suggest route improvements."},
+          {"role": "user", "content": "Optimize delivery routes for shipments to West Coast destinations"}
+        ]
+      },
+      "expected_use_case": "Route planning and cost optimization"
+    },
+    {
+      "id": 10,
+      "title": "Recently delivered shipments",
+      "description": "Shipments delivered in last 24 hours",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.status = 'Delivered' ORDER BY c.actualDelivery DESC"
+      },
+      "expected_use_case": "Delivery confirmation and customer satisfaction tracking"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "industry": "retail",
+  "display_name": "Retail & E-Commerce",
+  "description": "Product catalog management and transaction analytics for retail businesses",
+  "icon": "🛒",
+  "cosmos_db": {
+    "database": "retail-mcp",
+    "container": "transactions",
+    "partition_key": "/customerId",
+    "schema": {
+      "transactionId": "string",
+      "customerId": "string",
+      "customerName": "string",
+      "customerEmail": "string",
+      "transactionDate": "string",
+      "totalAmount": "number",
+      "currency": "string",
+      "paymentMethod": "string",
+      "status": "string",
+      "items": [
+        {
+          "productId": "string",
+          "productName": "string",
+          "category": "string",
+          "quantity": "number",
+          "unitPrice": "number",
+          "discount": "number",
+          "sku": "string"
+        }
+      ],
+      "shippingAddress": {
+        "street": "string",
+        "city": "string",
+        "state": "string",
+        "zipCode": "string",
+        "country": "string"
+      },
+      "storeLocation": "string",
+      "salesChannel": "string",
+      "loyaltyPoints": "number",
+      "promotionCode": "string"
+    }
+  },
+  "search_index": {
+    "name": "retail-index",
+    "fields": [
+      {"name": "transactionId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "customerId", "type": "Edm.String", "filterable": true, "searchable": true},
+      {"name": "customerName", "type": "Edm.String", "searchable": true},
+      {"name": "productNames", "type": "Collection(Edm.String)", "searchable": true},
+      {"name": "categories", "type": "Collection(Edm.String)", "filterable": true, "facetable": true},
+      {"name": "totalAmount", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "transactionDate", "type": "Edm.DateTimeOffset", "filterable": true, "sortable": true},
+      {"name": "storeLocation", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "salesChannel", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true}
+    ]
+  },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "cosmos_create_item",
+    "search_documents",
+    "search_semantic",
+    "openai_chat_completion"
+  ],
+  "sample_data_size": 100000
+}

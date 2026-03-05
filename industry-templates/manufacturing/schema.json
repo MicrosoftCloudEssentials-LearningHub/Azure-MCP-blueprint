@@ -1,0 +1,64 @@
+{
+  "industry": "manufacturing",
+  "display_name": "Manufacturing & IoT",
+  "description": "IoT telemetry, predictive maintenance, and production tracking for smart manufacturing",
+  "icon": "🏭",
+  "cosmos_db": {
+    "database": "manufacturing-mcp",
+    "container": "equipment-telemetry",
+    "partition_key": "/equipmentId",
+    "schema": {
+      "equipmentId": "string",
+      "equipmentName": "string",
+      "equipmentType": "string",
+      "manufacturer": "string",
+      "installDate": "string",
+      "location": {
+        "facility": "string",
+        "zone": "string",
+        "floor": "number"
+      },
+      "telemetry": {
+        "temperature": "number",
+        "vibration": "number",
+        "pressure": "number",
+        "rpm": "number",
+        "powerConsumption": "number"
+      },
+      "status": "string",
+      "lastMaintenanceDate": "string",
+      "nextMaintenanceDue": "string",
+      "failurePredictionScore": "number",
+      "operatingHours": "number",
+      "productionOutput": "number",
+      "qualityMetrics": {
+        "defectRate": "number",
+        "efficiency": "number"
+      },
+      "alerts": "array",
+      "maintenanceHistory": "array"
+    }
+  },
+  "search_index": {
+    "name": "manufacturing-index",
+    "fields": [
+      {"name": "equipmentId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "equipmentName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "equipmentType", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "failurePredictionScore", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "facility", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "alerts", "type": "Collection(Edm.String)", "searchable": true}
+    ],
+    "semantic_config": {
+      "title": "equipmentName",
+      "content": ["alerts", "equipmentType"]
+    }
+  },
+  "sample_data_config": {
+    "record_count": 100000,
+    "equipment_types": ["CNC Machine", "Robotic Arm", "Conveyor Belt", "Assembly Station", "Quality Inspection Unit", "Packaging System"],
+    "facilities": ["Plant A - Austin TX", "Plant B - Detroit MI", "Plant C - Charlotte NC"],
+    "status_distribution": {"operational": 0.85, "maintenance": 0.10, "fault": 0.05}
+  }
+}

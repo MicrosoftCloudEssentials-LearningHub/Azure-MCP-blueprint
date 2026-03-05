@@ -1,0 +1,114 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Honor students with high GPA",
+      "description": "Find students with GPA above 3.5",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.gpa >= 3.5 ORDER BY c.gpa DESC"
+      },
+      "expected_use_case": "Dean's list and scholarship eligibility"
+    },
+    {
+      "id": 2,
+      "title": "Students by major",
+      "description": "Query all Computer Science students",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "major eq 'Computer Science'",
+        "top": 100
+      },
+      "expected_use_case": "Department enrollment analytics"
+    },
+    {
+      "id": 3,
+      "title": "At-risk students",
+      "description": "Find students with low attendance or poor academic standing",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.academicStanding = 'Probation' OR c.attendance.rate < 0.70"
+      },
+      "expected_use_case": "Early intervention and student support services"
+    },
+    {
+      "id": 4,
+      "title": "Graduating seniors",
+      "description": "List all senior students eligible for graduation",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "academicLevel eq 'Senior'",
+        "top": 200
+      },
+      "expected_use_case": "Graduation planning and commencement coordination"
+    },
+    {
+      "id": 5,
+      "title": "Financial aid recipients",
+      "description": "Students receiving financial aid",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.financialAid.status = 'Active'"
+      },
+      "expected_use_case": "Financial aid administration and reporting"
+    },
+    {
+      "id": 6,
+      "title": "Semantic search for course topics",
+      "description": "AI-powered search for specific academic interests",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "machine learning artificial intelligence data science",
+        "top": 30
+      },
+      "expected_use_case": "Course recommendation and academic advising"
+    },
+    {
+      "id": 7,
+      "title": "Near graduation students",
+      "description": "Students within 15 credits of graduation",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE (c.credits.required - c.credits.completed) <= 15"
+      },
+      "expected_use_case": "Degree completion tracking"
+    },
+    {
+      "id": 8,
+      "title": "Students by academic advisor",
+      "description": "List all students assigned to specific advisor",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "advisor eq 'Dr. Johnson'",
+        "top": 50
+      },
+      "expected_use_case": "Advisor workload management"
+    },
+    {
+      "id": 9,
+      "title": "AI academic recommendations",
+      "description": "Generate personalized academic guidance",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are an academic advisor AI. Provide personalized course and career recommendations."},
+          {"role": "user", "content": "Suggest courses for a Computer Science junior with interest in AI"}
+        ]
+      },
+      "expected_use_case": "Personalized academic planning"
+    },
+    {
+      "id": 10,
+      "title": "Recently enrolled students",
+      "description": "New students enrolled in last semester",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.enrollmentDate != null ORDER BY c.enrollmentDate DESC"
+      },
+      "expected_use_case": "New student orientation and onboarding"
+    }
+  ]
+}

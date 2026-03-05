@@ -1,0 +1,49 @@
+{
+  "industry": "hospitality",
+  "display_name": "Hospitality & Tourism",
+  "description": "Hotel reservations, guest management, and service optimization for hospitality industry",
+  "icon": "🏨",
+  "cosmos_db": {
+    "database": "hospitality-mcp",
+    "container": "reservations",
+    "partition_key": "/reservationId",
+    "schema": {
+      "reservationId": "string",
+      "confirmationNumber": "string",
+      "guestName": "string",
+      "guestEmail": "string",
+      "guestPhone": "string",
+      "loyaltyTier": "string",
+      "loyaltyPoints": "number",
+      "checkInDate": "string",
+      "checkOutDate": "string",
+      "nights": "number",
+      "roomType": "string",
+      "roomNumber": "string",
+      "rateCode": "string",
+      "totalAmount": "number",
+      "status": "string",
+      "specialRequests": "array",
+      "guestPreferences": {
+        "bedType": "string",
+        "floor": "string",
+        "smokingRoom": "boolean"
+      },
+      "bookingChannel": "string",
+      "paymentStatus": "string",
+      "checkInStatus": "string"
+    }
+  },
+  "search_index": {
+    "name": "hospitality-index",
+    "fields": [
+      {"name": "reservationId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "guestName", "type": "Edm.String", "searchable": true},
+      {"name": "confirmationNumber", "type": "Edm.String", "searchable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "loyaltyTier", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "roomType", "type": "Edm.String", "filterable": true, "facetable": true}
+    ]
+  },
+  "sample_data_size": 100000
+}

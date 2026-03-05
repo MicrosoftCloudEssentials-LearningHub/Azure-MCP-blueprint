@@ -1,0 +1,54 @@
+{
+  "industry": "insurance",
+  "display_name": "Insurance & Claims",
+  "description": "Claims processing, risk assessment, and policy management for insurance providers",
+  "icon": "🛡️",
+  "cosmos_db": {
+    "database": "insurance-mcp",
+    "container": "claims-records",
+    "partition_key": "/claimId",
+    "schema": {
+      "claimId": "string",
+      "policyNumber": "string",
+      "policyHolder": {
+        "name": "string",
+        "contact": "string",
+        "address": "string"
+      },
+      "claimType": "string",
+      "incidentDate": "string",
+      "filedDate": "string",
+      "status": "string",
+      "claimAmount": "number",
+      "approvedAmount": "number",
+      "deductible": "number",
+      "fraudRiskScore": "number",
+      "adjuster": "string",
+      "description": "string",
+      "location": {
+        "city": "string",
+        "state": "string"
+      },
+      "documents": "array",
+      "resolution": "string",
+      "settlementDate": "string",
+      "priority": "string"
+    }
+  },
+  "search_index": {
+    "name": "insurance-index",
+    "fields": [
+      {"name": "claimId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "policyNumber", "type": "Edm.String", "searchable": true},
+      {"name": "claimType", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "fraudRiskScore", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "description", "type": "Edm.String", "searchable": true}
+    ],
+    "semantic_config": {
+      "title": "claimType",
+      "content": ["description", "resolution"]
+    }
+  },
+  "sample_data_size": 100000
+}

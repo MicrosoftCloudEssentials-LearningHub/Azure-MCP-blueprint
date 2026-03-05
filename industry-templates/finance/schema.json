@@ -1,0 +1,65 @@
+{
+  "industry": "finance",
+  "display_name": "Financial Services",
+  "description": "Transaction monitoring and customer account management for financial institutions",
+  "icon": "💰",
+  "cosmos_db": {
+    "database": "finance-mcp",
+    "container": "transactions",
+    "partition_key": "/accountId",
+    "schema": {
+      "transactionId": "string",
+      "accountId": "string",
+      "customerId": "string",
+      "customerName": "string",
+      "transactionType": "string",
+      "amount": "number",
+      "currency": "string",
+      "timestamp": "string",
+      "status": "string",
+      "merchantName": "string",
+      "merchantCategory": "string",
+      "location": {
+        "city": "string",
+        "state": "string",
+        "country": "string",
+        "coordinates": {
+          "lat": "number",
+          "lon": "number"
+        }
+      },
+      "paymentMethod": "string",
+      "cardLast4": "string",
+      "accountBalance": "number",
+      "fraudScore": "number",
+      "isInternational": "boolean",
+      "description": "string",
+      "category": "string",
+      "tags": "array"
+    }
+  },
+  "search_index": {
+    "name": "finance-index",
+    "fields": [
+      {"name": "transactionId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "accountId", "type": "Edm.String", "filterable": true, "searchable": true},
+      {"name": "customerId", "type": "Edm.String", "filterable": true, "searchable": true},
+      {"name": "customerName", "type": "Edm.String", "searchable": true},
+      {"name": "transactionType", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "amount", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "timestamp", "type": "Edm.DateTimeOffset", "filterable": true, "sortable": true},
+      {"name": "merchantName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "merchantCategory", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "fraudScore", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "description", "type": "Edm.String", "searchable": true}
+    ]
+  },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "cosmos_create_item",
+    "search_documents",
+    "search_semantic",
+    "openai_chat_completion"
+  ],
+  "sample_data_size": 100000
+}

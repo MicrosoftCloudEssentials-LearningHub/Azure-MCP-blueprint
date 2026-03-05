@@ -1,0 +1,115 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Luxury properties",
+      "description": "Homes priced above $1,000,000",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.price > 1000000 ORDER BY c.price DESC"
+      },
+      "expected_use_case": "High-end property marketing"
+    },
+    {
+      "id": 2,
+      "title": "Active listings",
+      "description": "Currently available properties",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'Active'",
+        "top": 100
+      },
+      "expected_use_case": "Buyer search and property matching"
+    },
+    {
+      "id": 3,
+      "title": "Family homes",
+      "description": "Properties with 3+ bedrooms",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "bedrooms ge 3",
+        "top": 75
+      },
+      "expected_use_case": "Family buyer targeting"
+    },
+    {
+      "id": 4,
+      "title": "Properties with pools",
+      "description": "Homes featuring swimming pools",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "pool swimming",
+        "filter": null,
+        "top": 50
+      },
+      "expected_use_case": "Amenity-based property search"
+    },
+    {
+      "id": 5,
+      "title": "New construction",
+      "description": "Properties built in last 5 years",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.yearBuilt >= 2021"
+      },
+      "expected_use_case": "New home buyer interest"
+    },
+    {
+      "id": 6,
+      "title": "Properties with offers",
+      "description": "Listings that have received offers",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE ARRAY_LENGTH(c.offers) > 0"
+      },
+      "expected_use_case": "Competitive bidding analysis"
+    },
+    {
+      "id": 7,
+      "title": "Stale listings",
+      "description": "Properties on market over 90 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.daysOnMarket > 90 ORDER BY c.daysOnMarket DESC"
+      },
+      "expected_use_case": "Pricing strategy review"
+    },
+    {
+      "id": 8,
+      "title": "Condos and townhomes",
+      "description": "Multi-family properties",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "propertyType eq 'Condo' or propertyType eq 'Townhouse'",
+        "top": 60
+      },
+      "expected_use_case": "Urban buyer segment"
+    },
+    {
+      "id": 9,
+      "title": "AI property recommendations",
+      "description": "Generate personalized property matches",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are a real estate AI assistant. Match buyers with ideal properties based on preferences."},
+          {"role": "user", "content": "Recommend properties for a young professional seeking urban living with modern amenities"}
+        ]
+      },
+      "expected_use_case": "Buyer-agent collaboration and lead conversion"
+    },
+    {
+      "id": 10,
+      "title": "Price per square foot analysis",
+      "description": "Best value properties by price/sqft",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.pricePerSqFt < 200 ORDER BY c.pricePerSqFt"
+      },
+      "expected_use_case": "Investment opportunity identification"
+    }
+  ]
+}

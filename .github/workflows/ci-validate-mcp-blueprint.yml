@@ -1,0 +1,113 @@
+name: CI - Validate MCP Blueprint (scripts, terraform, UI, templates)
+
+on:
+  pull_request:
+    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Validate Python scripts
+      run: |
+        python -m py_compile scripts/generate_sample_data.py
+        python -m py_compile scripts/upload_sample_data.py
+        python -m py_compile scripts/validate-mcp.py
+        python -m py_compile src/mcp-server/main.py
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.5.0
+    
+    - name: Terraform Format Check
+      working-directory: ./terraform-infrastructure
+      run: terraform fmt -check -recursive
+    
+    - name: Terraform Init
+      working-directory: ./terraform-infrastructure
+      run: terraform init -backend=false
+    
+    - name: Terraform Validate
+      working-directory: ./terraform-infrastructure
+      run: terraform validate
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Validate Demo UI
+      if: ${{ hashFiles('src/demo-ui/package.json') != '' }}
+      working-directory: ./src/demo-ui
+      run: |
+        npm install
+        npm run build
+
+    - name: Skip Demo UI Validation
+      if: ${{ hashFiles('src/demo-ui/package.json') == '' }}
+      run: echo "No src/demo-ui found; skipping UI build."
+    
+    - name: Validate Industry Templates
+      run: |
+        python -c "
+        import json
+        from pathlib import Path
+
+        templates_dir = Path('industry-templates')
+        assert templates_dir.exists(), 'industry-templates folder not found'
+
+        industry_dirs = sorted([p for p in templates_dir.iterdir() if p.is_dir()])
+        assert industry_dirs, 'No industry template folders found'
+
+        for industry_dir in industry_dirs:
+          industry = industry_dir.name
+
+          schema_path = industry_dir / 'schema.json'
+          queries_path = industry_dir / 'queries.json'
+
+          assert schema_path.exists(), f'Missing schema.json for {industry}'
+          assert queries_path.exists(), f'Missing queries.json for {industry}'
+
+          with schema_path.open('r', encoding='utf-8') as f:
+            schema = json.load(f)
+            assert 'cosmos_db' in schema
+            assert 'search_index' in schema
+            assert 'mcp_tools' in schema
+
+            # Accept either size field style; defaulting is handled by scripts.
+            has_size = isinstance(schema.get('sample_data_size'), int)
+            has_cfg = isinstance((schema.get('sample_data_config') or {}).get('record_count'), int)
+            assert has_size or has_cfg, f'Missing sample size config for {industry}'
+
+          with queries_path.open('r', encoding='utf-8') as f:
+            queries = json.load(f)
+            assert len(queries) == 10, f'{industry} queries.json must contain exactly 10 queries'
+
+          print(f'✓ {industry} template valid (10 queries)')
+
+        print(f'All industry templates validated successfully! ({len(industry_dirs)} industries)')
+        "
+    
+    - name: Summary
+      run: |
+        echo "All validation checks passed!"
+        echo "- Python scripts: OK"
+        echo "- Terraform configuration: OK"
+        echo "- Demo UI build: OK"
+        echo "- Industry templates: OK"

@@ -1,0 +1,115 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Today's check-ins",
+      "description": "Guests checking in today",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.checkInDate != null ORDER BY c.checkInDate"
+      },
+      "expected_use_case": "Front desk arrival preparation"
+    },
+    {
+      "id": 2,
+      "title": "VIP guests",
+      "description": "Premium loyalty tier guests",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "loyaltyTier eq 'Platinum'",
+        "top": 50
+      },
+      "expected_use_case": "Special guest services and amenities"
+    },
+    {
+      "id": 3,
+      "title": "Pending reservations",
+      "description": "Unconfirmed or pending bookings",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'Pending'",
+        "top": 75
+      },
+      "expected_use_case": "Reservation confirmation workflow"
+    },
+    {
+      "id": 4,
+      "title": "Suite reservations",
+      "description": "All luxury suite bookings",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "suite",
+        "filter": null,
+        "top": 30
+      },
+      "expected_use_case": "Premium room management"
+    },
+    {
+      "id": 5,
+      "title": "Long-stay guests",
+      "description": "Reservations longer than 7 nights",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.nights >= 7"
+      },
+      "expected_use_case": "Extended stay services and discounts"
+    },
+    {
+      "id": 6,
+      "title": "Guests with special requests",
+      "description": "Reservations with accessibility or special needs",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE ARRAY_LENGTH(c.specialRequests) > 0"
+      },
+      "expected_use_case": "Guest satisfaction and accommodation preparation"
+    },
+    {
+      "id": 7,
+      "title": "Online booking channel",
+      "description": "Reservations from website or OTA",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "bookingChannel eq 'Online'",
+        "top": 100
+      },
+      "expected_use_case": "Channel performance analytics"
+    },
+    {
+      "id": 8,
+      "title": "Unpaid reservations",
+      "description": "Bookings with pending payment",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.paymentStatus = 'Pending'"
+      },
+      "expected_use_case": "Payment follow-up and cancellation prevention"
+    },
+    {
+      "id": 9,
+      "title": "AI guest concierge",
+      "description": "Personalized guest recommendations",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are a hotel concierge AI. Provide personalized recommendations for guests."},
+          {"role": "user", "content": "Suggest activities for a family with young children visiting for 3 days"}
+        ]
+      },
+      "expected_use_case": "Guest experience enhancement"
+    },
+    {
+      "id": 10,
+      "title": "High-value reservations",
+      "description": "Bookings exceeding $2000",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.totalAmount > 2000 ORDER BY c.totalAmount DESC"
+      },
+      "expected_use_case": "Revenue management and premium service allocation"
+    }
+  ]
+}

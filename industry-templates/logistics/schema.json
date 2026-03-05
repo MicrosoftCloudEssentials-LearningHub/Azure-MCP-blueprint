@@ -1,0 +1,67 @@
+{
+  "industry": "logistics",
+  "display_name": "Logistics & Supply Chain",
+  "description": "Shipment tracking, inventory management, and supply chain optimization",
+  "icon": "🚚",
+  "cosmos_db": {
+    "database": "logistics-mcp",
+    "container": "shipment-tracking",
+    "partition_key": "/shipmentId",
+    "schema": {
+      "shipmentId": "string",
+      "trackingNumber": "string",
+      "status": "string",
+      "origin": {
+        "facility": "string",
+        "city": "string",
+        "country": "string",
+        "coordinates": {"lat": "number", "lon": "number"}
+      },
+      "destination": {
+        "facility": "string",
+        "city": "string",
+        "country": "string",
+        "coordinates": {"lat": "number", "lon": "number"}
+      },
+      "carrier": "string",
+      "shipmentType": "string",
+      "weight": "number",
+      "volume": "number",
+      "value": "number",
+      "priority": "string",
+      "estimatedDelivery": "string",
+      "actualDelivery": "string",
+      "currentLocation": "string",
+      "route": "array",
+      "delayReason": "string",
+      "temperatureControlled": "boolean",
+      "hazardousMaterials": "boolean",
+      "customsClearance": "string",
+      "customerInfo": {
+        "name": "string",
+        "contact": "string"
+      }
+    }
+  },
+  "search_index": {
+    "name": "logistics-index",
+    "fields": [
+      {"name": "shipmentId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "trackingNumber", "type": "Edm.String", "searchable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "carrier", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "priority", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "delayReason", "type": "Edm.String", "searchable": true, "filterable": true}
+    ],
+    "semantic_config": {
+      "title": "trackingNumber",
+      "content": ["status", "delayReason", "currentLocation"]
+    }
+  },
+  "sample_data_config": {
+    "record_count": 100000,
+    "statuses": ["In Transit", "Delivered", "Delayed", "Customs Hold", "Out for Delivery", "Warehouse"],
+    "carriers": ["FedEx", "UPS", "DHL", "USPS", "Regional Carrier"],
+    "priorities": ["Standard", "Express", "Overnight", "Economy"]
+  }
+}

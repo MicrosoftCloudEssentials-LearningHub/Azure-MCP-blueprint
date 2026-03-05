@@ -1,0 +1,119 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Find high-risk transactions",
+      "description": "Identify transactions with elevated fraud scores for review",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.fraudScore > 0.7 ORDER BY c.fraudScore DESC"
+      },
+      "expected_use_case": "Fraud detection and prevention"
+    },
+    {
+      "id": 2,
+      "title": "Search large withdrawals",
+      "description": "Find withdrawal transactions over $10,000 for compliance monitoring",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.transactionType = 'Withdrawal' AND c.amount > 10000"
+      },
+      "expected_use_case": "Anti-money laundering (AML) compliance and reporting"
+    },
+    {
+      "id": 3,
+      "title": "Query international transactions",
+      "description": "List all cross-border transactions for foreign exchange analysis",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.isInternational = true"
+      },
+      "expected_use_case": "International transaction monitoring and fee optimization"
+    },
+    {
+      "id": 4,
+      "title": "Find account activity",
+      "description": "Retrieve transaction history for specific account",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.accountId = 'ACC-789012' ORDER BY c.timestamp DESC"
+      },
+      "expected_use_case": "Customer service and account reconciliation"
+    },
+    {
+      "id": 5,
+      "title": "Semantic search for travel expenses",
+      "description": "Find travel-related transactions using AI understanding",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "hotel airline flight accommodation travel vacation",
+        "top": 30
+      },
+      "expected_use_case": "Expense categorization and travel rewards programs"
+    },
+    {
+      "id": 6,
+      "title": "Query by merchant category",
+      "description": "Analyze all restaurant transactions for spending insights",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "merchantCategory eq 'Restaurants'",
+        "top": 50
+      },
+      "expected_use_case": "Spending pattern analysis and budget recommendations"
+    },
+    {
+      "id": 7,
+      "title": "Find declined transactions",
+      "description": "Identify failed transactions for customer outreach",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.status = 'Declined'"
+      },
+      "expected_use_case": "Payment failure analysis and customer support"
+    },
+    {
+      "id": 8,
+      "title": "AI financial advice",
+      "description": "Generate personalized savings recommendations based on spending patterns",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a financial advisor assistant providing spending insights."
+          },
+          {
+            "role": "user",
+            "content": "A customer spends $800/month on restaurants and $300 on entertainment. Suggest 3 budget optimization tips."
+          }
+        ],
+        "max_tokens": 200
+      },
+      "expected_use_case": "Personal financial management and advisory services"
+    },
+    {
+      "id": 9,
+      "title": "Query recent deposits",
+      "description": "Find all deposits in the last 30 days for cash flow analysis",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.transactionType = 'Deposit' AND c.timestamp >= '2025-12-06' ORDER BY c.timestamp DESC"
+      },
+      "expected_use_case": "Cash flow management and income verification"
+    },
+    {
+      "id": 10,
+      "title": "Search by merchant name",
+      "description": "Find all transactions with specific merchant (e.g., Amazon)",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "Amazon",
+        "filter": null,
+        "top": 100
+      },
+      "expected_use_case": "Merchant-specific analysis and partnership programs"
+    }
+  ]
+}

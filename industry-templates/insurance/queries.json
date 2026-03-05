@@ -1,0 +1,116 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "High-risk fraud claims",
+      "description": "Find claims with fraud score above 0.8",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.fraudRiskScore > 0.8 ORDER BY c.fraudRiskScore DESC"
+      },
+      "expected_use_case": "Fraud detection and investigation prioritization"
+    },
+    {
+      "id": 2,
+      "title": "Pending claims",
+      "description": "All claims awaiting review or approval",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'Pending'",
+        "top": 100
+      },
+      "expected_use_case": "Claims processing workflow management"
+    },
+    {
+      "id": 3,
+      "title": "High-value claims",
+      "description": "Claims exceeding $50,000",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.claimAmount > 50000"
+      },
+      "expected_use_case": "Large claim special handling and senior review"
+    },
+    {
+      "id": 4,
+      "title": "Semantic search for accident types",
+      "description": "AI-powered search for specific incident patterns",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "vehicle collision rear-end accident",
+        "top": 25
+      },
+      "expected_use_case": "Pattern analysis for risk assessment"
+    },
+    {
+      "id": 5,
+      "title": "Claims by adjuster",
+      "description": "View workload for specific adjuster",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "adjuster eq 'John Smith'",
+        "top": 50
+      },
+      "expected_use_case": "Workload balancing and performance tracking"
+    },
+    {
+      "id": 6,
+      "title": "Recently filed claims",
+      "description": "Claims submitted in last 7 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.filedDate != null ORDER BY c.filedDate DESC"
+      },
+      "expected_use_case": "New claims intake and initial processing"
+    },
+    {
+      "id": 7,
+      "title": "Denied claims",
+      "description": "All rejected or denied claims",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'Denied'",
+        "top": 75
+      },
+      "expected_use_case": "Appeals management and policy review"
+    },
+    {
+      "id": 8,
+      "title": "Property damage claims",
+      "description": "All property/homeowner claims",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "claimType eq 'Property'",
+        "top": 100
+      },
+      "expected_use_case": "Department-specific claim routing"
+    },
+    {
+      "id": 9,
+      "title": "AI claims assessment",
+      "description": "Generate intelligent claim recommendations",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are an insurance claims AI. Analyze claim details and provide assessment recommendations."},
+          {"role": "user", "content": "Assess a property damage claim for water damage with $25,000 estimate"}
+        ]
+      },
+      "expected_use_case": "Automated claim triage and adjuster assistance"
+    },
+    {
+      "id": 10,
+      "title": "Recently settled claims",
+      "description": "Claims closed in last 30 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.status = 'Settled' ORDER BY c.settlementDate DESC"
+      },
+      "expected_use_case": "Settlement tracking and customer satisfaction follow-up"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "industry": "education",
+  "display_name": "Education & Learning",
+  "description": "Student records, course management, and academic analytics for educational institutions",
+  "icon": "🎓",
+  "cosmos_db": {
+    "database": "education-mcp",
+    "container": "student-records",
+    "partition_key": "/studentId",
+    "schema": {
+      "studentId": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "email": "string",
+      "dateOfBirth": "string",
+      "enrollmentDate": "string",
+      "academicLevel": "string",
+      "major": "string",
+      "gpa": "number",
+      "credits": {
+        "completed": "number",
+        "inProgress": "number",
+        "required": "number"
+      },
+      "courses": "array",
+      "attendance": {
+        "rate": "number",
+        "absences": "number"
+      },
+      "financialAid": {
+        "status": "string",
+        "amount": "number"
+      },
+      "academicStanding": "string",
+      "advisor": "string",
+      "graduationDate": "string",
+      "extracurricular": "array"
+    }
+  },
+  "search_index": {
+    "name": "education-index",
+    "fields": [
+      {"name": "studentId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "firstName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "lastName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "major", "type": "Edm.String", "searchable": true, "filterable": true, "facetable": true},
+      {"name": "academicLevel", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "gpa", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "academicStanding", "type": "Edm.String", "filterable": true, "facetable": true}
+    ],
+    "semantic_config": {
+      "title": "major",
+      "content": ["academicLevel", "courses"]
+    }
+  },
+  "sample_data_config": {
+    "record_count": 100000,
+    "academic_levels": ["Freshman", "Sophomore", "Junior", "Senior", "Graduate"],
+    "majors": ["Computer Science", "Business Administration", "Engineering", "Biology", "Psychology", "Mathematics"],
+    "gpa_range": [2.0, 4.0]
+  }
+}

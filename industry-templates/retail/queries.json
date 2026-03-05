@@ -1,0 +1,121 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Find high-value transactions",
+      "description": "Search for transactions over $500 for VIP customer analysis",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.totalAmount > 500 ORDER BY c.totalAmount DESC"
+      },
+      "expected_use_case": "VIP customer identification and retention programs"
+    },
+    {
+      "id": 2,
+      "title": "Search electronics purchases",
+      "description": "Find all transactions containing electronics products",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "electronics laptop smartphone tablet",
+        "filter": null,
+        "top": 20
+      },
+      "expected_use_case": "Category performance analysis and inventory planning"
+    },
+    {
+      "id": 3,
+      "title": "Query recent online orders",
+      "description": "List all online channel orders from the last 7 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.salesChannel = 'Online' AND c.transactionDate >= '2025-12-29'"
+      },
+      "expected_use_case": "E-commerce performance tracking and fulfillment planning"
+    },
+    {
+      "id": 4,
+      "title": "Find customer purchase history",
+      "description": "Retrieve all transactions for a specific customer",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.customerId = 'CUST-12345' ORDER BY c.transactionDate DESC"
+      },
+      "expected_use_case": "Customer service and personalized recommendations"
+    },
+    {
+      "id": 5,
+      "title": "Semantic search for gift purchases",
+      "description": "Find gift-related transactions using AI semantic understanding",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "gift birthday present holiday christmas valentine",
+        "top": 25
+      },
+      "expected_use_case": "Seasonal marketing and gift recommendation systems"
+    },
+    {
+      "id": 6,
+      "title": "Query by store location",
+      "description": "Analyze transactions from New York stores",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "storeLocation eq 'New York'",
+        "top": 50
+      },
+      "expected_use_case": "Regional performance analysis and local inventory optimization"
+    },
+    {
+      "id": 7,
+      "title": "Find failed transactions",
+      "description": "Identify failed or cancelled orders for recovery campaigns",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.status IN ('Failed', 'Cancelled')"
+      },
+      "expected_use_case": "Cart abandonment recovery and payment issue resolution"
+    },
+    {
+      "id": 8,
+      "title": "AI product recommendation",
+      "description": "Generate personalized product recommendations using customer history",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a retail product recommendation assistant."
+          },
+          {
+            "role": "user",
+            "content": "Based on a customer who recently purchased running shoes and fitness tracker, suggest 3 complementary products."
+          }
+        ],
+        "max_tokens": 150
+      },
+      "expected_use_case": "Personalized marketing and cross-sell optimization"
+    },
+    {
+      "id": 9,
+      "title": "Query loyalty program members",
+      "description": "Find customers with high loyalty points balance",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.loyaltyPoints > 1000 ORDER BY c.loyaltyPoints DESC"
+      },
+      "expected_use_case": "Loyalty program engagement and reward campaigns"
+    },
+    {
+      "id": 10,
+      "title": "Search promotional campaign usage",
+      "description": "Analyze transactions using specific promotion codes",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "promotionCode eq 'SAVE20'",
+        "top": 100
+      },
+      "expected_use_case": "Marketing campaign effectiveness measurement"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "industry": "healthcare",
+  "display_name": "Healthcare",
+  "description": "Medical records management and patient data search for healthcare providers",
+  "icon": "🏥",
+  "cosmos_db": {
+    "database": "healthcare-mcp",
+    "container": "patient-records",
+    "partition_key": "/patientId",
+    "schema": {
+      "patientId": "string",
+      "firstName": "string",
+      "lastName": "string",
+      "dateOfBirth": "string",
+      "gender": "string",
+      "bloodType": "string",
+      "allergies": "array",
+      "chronicConditions": "array",
+      "medications": "array",
+      "lastVisitDate": "string",
+      "primaryPhysician": "string",
+      "insuranceProvider": "string",
+      "contactPhone": "string",
+      "address": {
+        "street": "string",
+        "city": "string",
+        "state": "string",
+        "zipCode": "string"
+      },
+      "emergencyContact": {
+        "name": "string",
+        "relationship": "string",
+        "phone": "string"
+      },
+      "medicalHistory": "string",
+      "labResults": "array",
+      "vaccinations": "array"
+    }
+  },
+  "search_index": {
+    "name": "healthcare-index",
+    "fields": [
+      {"name": "patientId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "firstName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "lastName", "type": "Edm.String", "searchable": true, "filterable": true},
+      {"name": "chronicConditions", "type": "Collection(Edm.String)", "searchable": true, "filterable": true},
+      {"name": "medications", "type": "Collection(Edm.String)", "searchable": true, "filterable": true},
+      {"name": "allergies", "type": "Collection(Edm.String)", "searchable": true, "filterable": true},
+      {"name": "medicalHistory", "type": "Edm.String", "searchable": true},
+      {"name": "bloodType", "type": "Edm.String", "filterable": true},
+      {"name": "primaryPhysician", "type": "Edm.String", "searchable": true, "filterable": true}
+    ]
+  },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "cosmos_create_item",
+    "search_documents",
+    "search_semantic",
+    "openai_chat_completion"
+  ],
+  "sample_data_size": 100000
+}

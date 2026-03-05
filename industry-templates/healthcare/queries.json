@@ -1,0 +1,123 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "Find patients with diabetes",
+      "description": "Search for all patients diagnosed with diabetes",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "diabetes",
+        "filter": null,
+        "top": 10
+      },
+      "expected_use_case": "Clinical research and care coordination"
+    },
+    {
+      "id": 2,
+      "title": "Query patients by blood type",
+      "description": "Find all O-negative blood type patients for emergency blood donor database",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.bloodType = 'O-'"
+      },
+      "expected_use_case": "Emergency blood transfusion planning"
+    },
+    {
+      "id": 3,
+      "title": "Search patients with specific allergies",
+      "description": "Find patients allergic to penicillin to prevent adverse reactions",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "penicillin",
+        "filter": null,
+        "top": 20
+      },
+      "expected_use_case": "Medication safety and prescription validation"
+    },
+    {
+      "id": 4,
+      "title": "Find patients by physician",
+      "description": "List all patients under Dr. Smith's care",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "primaryPhysician eq 'Dr. Smith'",
+        "top": 50
+      },
+      "expected_use_case": "Care coordination and patient load balancing"
+    },
+    {
+      "id": 5,
+      "title": "Semantic search for cardiac conditions",
+      "description": "Find patients with heart-related conditions using AI-powered semantic search",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "heart disease cardiac arrhythmia coronary",
+        "top": 15
+      },
+      "expected_use_case": "Cardiology department patient identification"
+    },
+    {
+      "id": 6,
+      "title": "Query patients with multiple chronic conditions",
+      "description": "Find patients with both diabetes and hypertension for specialized care program",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE ARRAY_CONTAINS(c.chronicConditions, 'Diabetes') AND ARRAY_CONTAINS(c.chronicConditions, 'Hypertension')"
+      },
+      "expected_use_case": "Chronic disease management program enrollment"
+    },
+    {
+      "id": 7,
+      "title": "Find recently admitted patients",
+      "description": "List patients with visits in the last 30 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.lastVisitDate >= '2025-12-06' ORDER BY c.lastVisitDate DESC"
+      },
+      "expected_use_case": "Follow-up care and readmission prevention"
+    },
+    {
+      "id": 8,
+      "title": "AI-assisted medical summary",
+      "description": "Generate patient summary using OpenAI for care team briefing",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a medical assistant. Summarize patient records concisely."
+          },
+          {
+            "role": "user",
+            "content": "Summarize the medical history for patient with diabetes, hypertension, and recent cardiac event."
+          }
+        ],
+        "max_tokens": 200
+      },
+      "expected_use_case": "Clinical decision support and handoff communication"
+    },
+    {
+      "id": 9,
+      "title": "Search by insurance provider",
+      "description": "Find all patients with specific insurance for billing coordination",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "insuranceProvider eq 'BlueCross BlueShield'",
+        "top": 100
+      },
+      "expected_use_case": "Insurance verification and billing processing"
+    },
+    {
+      "id": 10,
+      "title": "Find pediatric patients",
+      "description": "Query patients under 18 years old for pediatric care scheduling",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.dateOfBirth > '2007-01-05'"
+      },
+      "expected_use_case": "Pediatric department resource planning"
+    }
+  ]
+}

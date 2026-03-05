@@ -1,0 +1,58 @@
+{
+  "industry": "realestate",
+  "display_name": "Real Estate & Property",
+  "description": "Property listings, sales tracking, and real estate portfolio management",
+  "icon": "🏠",
+  "cosmos_db": {
+    "database": "realestate-mcp",
+    "container": "property-listings",
+    "partition_key": "/propertyId",
+    "schema": {
+      "propertyId": "string",
+      "listingId": "string",
+      "status": "string",
+      "propertyType": "string",
+      "address": {
+        "street": "string",
+        "city": "string",
+        "state": "string",
+        "zipCode": "string",
+        "neighborhood": "string"
+      },
+      "price": "number",
+      "pricePerSqFt": "number",
+      "bedrooms": "number",
+      "bathrooms": "number",
+      "squareFeet": "number",
+      "lotSize": "number",
+      "yearBuilt": "number",
+      "features": "array",
+      "description": "string",
+      "listingAgent": {
+        "name": "string",
+        "contact": "string",
+        "agency": "string"
+      },
+      "daysOnMarket": "number",
+      "viewings": "number",
+      "offers": "array",
+      "openHouseDates": "array",
+      "photos": "array",
+      "virtualTourUrl": "string"
+    }
+  },
+  "search_index": {
+    "name": "realestate-index",
+    "fields": [
+      {"name": "propertyId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "propertyType", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "status", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "city", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "price", "type": "Edm.Double", "filterable": true, "sortable": true},
+      {"name": "bedrooms", "type": "Edm.Int32", "filterable": true, "sortable": true},
+      {"name": "description", "type": "Edm.String", "searchable": true},
+      {"name": "features", "type": "Collection(Edm.String)", "searchable": true, "filterable": true}
+    ]
+  },
+  "sample_data_size": 100000
+}

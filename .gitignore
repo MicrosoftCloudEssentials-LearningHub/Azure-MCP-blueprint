@@ -1,5 +1,14 @@
 # Local .terraform directories
 .terraform/
+*src/.env
+app-logs.zip
+LogFiles
+deploy.log
+__pycache__
+*.log 
+*agents_state.json
+.env.example
+.env_automation
 
 # .tfstate files
 *.tfstate
@@ -13,8 +22,16 @@ crash.*.log
 # password, private keys, and other secrets. These should not be part of version 
 # control as they are data points which are potentially sensitive and subject 
 # to change depending on the environment.
-*.tfvars
 *.tfvars.json
+.terraform.lock.hcl
+
+# Wizard-generated var file (environment-specific)
+terraform-infrastructure/terraform.generated.tfvars
+terraform.generated.tfvars
+
+# Wizard-generated overrides file (environment-specific)
+terraform-infrastructure/terraform.overrides.tfvars
+terraform.overrides.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -35,3 +52,25 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+*.egg-info/
+
+# Node.js (demo UI)
+node_modules/
+.npm/
+dist/
+build/
+
+# Generated data
+generated-data/
+sample-data-*.json
+
+# IDE
+.vscode/
+.idea/
+.DS_Store

@@ -1,0 +1,6 @@
+# MCP Blueprint - Optional script dependencies
+# Install with: pip install -r requirements.txt
+
+# Azure SDKs used by optional scripts under scripts/
+azure-mgmt-resource>=23.0.0
+azure-identity>=1.15.0

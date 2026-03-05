@@ -1,0 +1,455 @@
+# Microsoft Copilot Studio Integration with MCP Server
+
+## Overview
+
+Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access. Perfect for business users and citizen developers.
+
+## What You'll Build
+
+- **Custom Copilot** with MCP tool integration
+- **Conversational AI** for domain-specific tasks
+- **Enterprise Chatbot** with Azure service access
+- **Teams/Web deployment** ready
+
+## Prerequisites
+
+- Microsoft Copilot Studio license
+- MCP Server deployed with public endpoint
+- Microsoft Teams (optional, for Teams deployment)
+
+## Quick Start
+
+### Step 1: Access Copilot Studio
+
+1. Navigate to [Copilot Studio](https://copilotstudio.microsoft.com/)
+2. Sign in with your Microsoft account
+3. Select your environment (or create new)
+
+### Step 2: Create New Copilot
+
+1. Click **Create** → **New Copilot**
+2. Choose **From Blank**
+3. Enter details:
+   - **Name**: Healthcare Assistant (or your industry)
+   - **Description**: AI assistant with MCP-powered data access
+   - **Language**: English
+4. Click **Create**
+
+### Step 3: Add MCP Server as Action
+
+#### Option A: OpenAPI Connector (Recommended)
+
+1. In your Copilot, go to **Actions** tab
+2. Click **+ Add an action**
+3. Select **Custom connector**
+4. Choose **Create from blank**
+
+**Configure MCP Connector:**
+
+```yaml
+# MCP Server OpenAPI Specification
+openapi: 3.0.0
+info:
+  title: MCP Server API
+  version: 1.0.0
+  description: Model Context Protocol server with Azure service integration
+
+servers:
+  - url: https://your-mcp.azurecontainerapps.io
+    description: MCP Server endpoint
+
+paths:
+  /mcp/tools:
+    get:
+      summary: List available tools
+      operationId: listTools
+      responses:
+        '200':
+          description: List of MCP tools
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tools:
+                    type: array
+                    items:
+                      type: object
+
+  /mcp/tools/{toolName}:
+    post:
+      summary: Execute MCP tool
+      operationId: executeTool
+      parameters:
+        - name: toolName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                arguments:
+                  type: object
+      responses:
+        '200':
+          description: Tool execution result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: object
+                  isError:
+                    type: boolean
+
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Server health status
+```
+
+5. **Test the connector**: Click **Test** → **Test operation**
+6. **Create connection**: Add authentication (API key or none)
+7. **Save connector**
+
+#### Option B: Power Automate Flow
+
+1. Go to **Actions** → **Add an action**
+2. Select **Create a flow**
+3. Build flow in Power Automate:
+
+```
+Trigger: When Copilot receives message
+  ↓
+Action: HTTP - Call MCP Server
+  Method: POST
+  URI: https://your-mcp.azurecontainerapps.io/mcp/tools/{toolName}
+  Body: 
+    {
+      "arguments": {
+        "query": "@{triggerOutputs()?['text']}"
+      }
+    }
+  ↓
+Action: Parse JSON (MCP response)
+  ↓
+Response: Return to Copilot
+```
+
+4. **Save and publish flow**
+
+### Step 4: Configure Topics with MCP Tools
+
+#### Example: Healthcare Patient Lookup
+
+1. Go to **Topics** tab
+2. Click **+ New topic** → **From blank**
+3. Name: "Patient Lookup"
+4. Add trigger phrases:
+   - "Find patient"
+   - "Search for patient records"
+   - "Show me patient information"
+
+**Conversation Flow:**
+
+```
+Node 1: Trigger - Patient lookup request detected
+
+Node 2: Question - Get patient details
+  - "What is the patient name or ID you're looking for?"
+  - Save response as: patientQuery
+
+Node 3: Action - Call MCP Tool
+  - Connector: MCP Server API
+  - Operation: executeTool
+  - Tool Name: search_documents
+  - Arguments: 
+    {
+      "search_text": "{patientQuery}",
+      "top": 5
+    }
+  - Save response as: searchResults
+
+Node 4: Message - Display results
+  - "I found the following patient records:"
+  - {searchResults.content.results[0].firstName} {searchResults.content.results[0].lastName}
+  - Patient ID: {searchResults.content.results[0].patientId}
+  - Last Visit: {searchResults.content.results[0].lastVisitDate}
+
+Node 5: Question - Follow-up
+  - "Would you like more details on any patient?"
+  - Options: Yes / No
+```
+
+5. **Save topic**
+6. **Test in Test Copilot pane**
+
+### Step 5: Industry-Specific Topics
+
+#### Healthcare Topics
+
+**Topic: Medication Lookup**
+- Trigger: "What medications is patient taking?"
+- Action: `cosmos_query_items` → `SELECT c.medications FROM c WHERE c.patientId = '{patientId}'`
+
+**Topic: Allergy Check**
+- Trigger: "Check patient allergies"
+- Action: `search_documents` with filter on allergies field
+
+#### Retail Topics
+
+**Topic: Product Search**
+- Trigger: "Find product"
+- Action: `search_documents` → search product catalog
+
+**Topic: Inventory Check**
+- Trigger: "Check stock availability"
+- Action: `cosmos_query_items` → query inventory
+
+#### Finance Topics
+
+**Topic: Transaction Search**
+- Trigger: "Show my transactions"
+- Action: `cosmos_query_items` → filter by account
+
+**Topic: Fraud Alert**
+- Trigger: "Check for suspicious activity"
+- Action: `cosmos_query_items` → filter by fraud score > 0.7
+
+### Step 6: Add Generative Answers
+
+Enable generative responses powered by MCP data:
+
+1. Go to **Settings** → **Generative AI**
+2. Enable **Generative answers**
+3. Configure:
+   - **Data source**: MCP Server (via connector)
+   - **Moderation**: Medium
+   - **Content safety**: Enabled
+
+4. Create **Generative Topic**:
+
+```
+System Instructions:
+You are a {industry} AI assistant with access to real-time data via MCP tools.
+
+Available Tools:
+- search_documents: Full-text search
+- cosmos_query_items: SQL-like queries
+- search_semantic: AI-powered semantic search
+- openai_chat_completion: Generate insights
+
+When users ask questions:
+1. Identify the appropriate MCP tool
+2. Call the tool with correct parameters
+3. Interpret results clearly
+4. Provide helpful, accurate responses
+
+Always maintain data privacy and security.
+```
+
+### Step 7: Test Your Copilot
+
+1. Click **Test your copilot** (top right)
+2. Try example queries:
+   - "Find all diabetic patients"
+   - "Search for products under $50"
+   - "Show high-value transactions"
+
+3. Verify MCP tool calls in **Test** pane
+
+### Step 8: Publish
+
+#### Publish to Demo Website
+
+1. Go to **Publish** tab
+2. Click **Publish**
+3. Select **Demo website**
+4. Share link: `https://your-copilot.powerapps.com/...`
+
+#### Publish to Microsoft Teams
+
+1. Go to **Publish** tab
+2. Click **Publish**
+3. Select **Microsoft Teams**
+4. Configure:
+   - Icon
+   - Short description
+   - Full description
+5. **Submit for approval** (if required)
+6. **Install in Teams**
+
+#### Embed in Website
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Healthcare Assistant</title>
+</head>
+<body>
+    <h1>Healthcare AI Assistant</h1>
+    
+    <!-- Copilot Studio Embed Code -->
+    <div id="copilot-container"></div>
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script>
+        window.WebChat.renderWebChat({
+            directLine: window.WebChat.createDirectLine({
+                secret: 'YOUR_DIRECT_LINE_SECRET'
+            }),
+            userID: 'user-' + Date.now(),
+            username: 'User',
+            locale: 'en-US',
+            styleOptions: {
+                botAvatarImage: 'https://your-logo.png',
+                botAvatarInitials: 'HA',
+                userAvatarImage: '',
+                userAvatarInitials: 'You',
+                primaryFont: 'Segoe UI, sans-serif'
+            }
+        }, document.getElementById('copilot-container'));
+    </script>
+</body>
+</html>
+```
+
+## Advanced Features
+
+### Authentication & Security
+
+#### Azure AD Authentication
+
+1. In **Settings** → **Security**
+2. Enable **Authentication**
+3. Select **Azure Active Directory**
+4. Configure:
+   - Tenant ID
+   - Client ID
+   - Redirect URI
+
+#### Row-Level Security
+
+```yaml
+# In MCP Server, implement user-scoped queries
+def get_user_data(user_id: str, query: str):
+    # Add user filter to all queries
+    scoped_query = f"{query} AND c.ownerId = '{user_id}'"
+    return cosmos_client.query(scoped_query)
+```
+
+### Analytics & Monitoring
+
+1. Go to **Analytics** tab
+2. View metrics:
+   - Total sessions
+   - Resolution rate
+   - Escalation rate
+   - MCP tool usage
+
+3. Export logs for analysis
+
+### Multi-Language Support
+
+1. **Settings** → **Languages**
+2. Add languages:
+   - Spanish
+   - French
+   - German
+3. MCP server returns localized results
+
+## Industry Templates
+
+### Healthcare Copilot
+
+**Topics:**
+1. Patient Lookup
+2. Medication History
+3. Appointment Scheduling
+4. Lab Results Inquiry
+5. Allergy Checker
+
+**Sample Conversation:**
+
+```
+User: Find patients with diabetes
+Copilot: [Calls search_documents]
+        I found 342 patients with diabetes. Here are the top matches:
+        - John Smith (ID: P12345) - Last visit: 2024-01-15
+        - Sarah Johnson (ID: P67890) - Last visit: 2024-01-20
+        
+User: Show me John Smith's medications
+Copilot: [Calls cosmos_query_items]
+        John Smith is currently taking:
+        - Metformin 500mg - Twice daily
+        - Lisinopril 10mg - Once daily
+        - Aspirin 81mg - Once daily
+```
+
+### Retail Copilot
+
+**Topics:**
+1. Product Search
+2. Inventory Status
+3. Order Tracking
+4. Loyalty Points
+5. Recommendations
+
+### Finance Copilot
+
+**Topics:**
+1. Account Balance
+2. Transaction History
+3. Fraud Alerts
+4. Payment Processing
+5. Financial Insights
+
+## Best Practices
+
+1. **Keep topics focused**: One topic = one task
+2. **Use fallback**: Configure fallback topic for unhandled queries
+3. **Test thoroughly**: Test all conversation paths
+4. **Monitor performance**: Review analytics weekly
+5. **Iterate**: Update based on user feedback
+
+## Troubleshooting
+
+### MCP Connector Issues
+
+**Problem**: Connector fails to connect
+
+**Solution**:
+- Verify MCP endpoint URL is public
+- Check CORS settings on MCP server
+- Test endpoint with Postman first
+
+### Tool Call Failures
+
+**Problem**: Tool returns error
+
+**Solution**:
+- Validate argument schema
+- Check MCP server logs
+- Verify Azure service connectivity
+
+## Sample Copilot Export
+
+See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
+- Healthcare Assistant (.zip export)
+- Retail Assistant (.zip export)
+- Finance Assistant (.zip export)
+
+## Next Steps
+
+- [Custom App Integration](./custom-app-integration.md)
+- [Azure AI Foundry Integration](./azure-ai-foundry-integration.md)
+- [Pre-built Agent Samples](../../agent-samples/README.md)

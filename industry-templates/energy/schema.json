@@ -1,0 +1,52 @@
+{
+  "industry": "energy",
+  "display_name": "Energy & Utilities",
+  "description": "Smart grid monitoring, energy consumption analytics, and utility management",
+  "icon": "⚡",
+  "cosmos_db": {
+    "database": "energy-mcp",
+    "container": "meter-readings",
+    "partition_key": "/meterId",
+    "schema": {
+      "meterId": "string",
+      "customerAccount": "string",
+      "meterType": "string",
+      "location": {
+        "address": "string",
+        "city": "string",
+        "state": "string",
+        "zone": "string",
+        "coordinates": {"lat": "number", "lon": "number"}
+      },
+      "readingDate": "string",
+      "consumption": {
+        "current": "number",
+        "previous": "number",
+        "unit": "string"
+      },
+      "peakDemand": "number",
+      "billingAmount": "number",
+      "rateSchedule": "string",
+      "powerQuality": {
+        "voltage": "number",
+        "frequency": "number",
+        "powerFactor": "number"
+      },
+      "outageHistory": "array",
+      "solarGeneration": "number",
+      "carbonOffset": "number",
+      "alerts": "array"
+    }
+  },
+  "search_index": {
+    "name": "energy-index",
+    "fields": [
+      {"name": "meterId", "type": "Edm.String", "key": true, "searchable": false},
+      {"name": "customerAccount", "type": "Edm.String", "searchable": true},
+      {"name": "meterType", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "zone", "type": "Edm.String", "filterable": true, "facetable": true},
+      {"name": "alerts", "type": "Collection(Edm.String)", "searchable": true}
+    ]
+  },
+  "sample_data_size": 100000
+}

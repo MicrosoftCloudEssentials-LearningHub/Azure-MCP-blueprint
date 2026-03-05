@@ -1,0 +1,114 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "High-risk equipment requiring maintenance",
+      "description": "Find all equipment with failure prediction score > 0.7",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.failurePredictionScore > 0.7 ORDER BY c.failurePredictionScore DESC"
+      },
+      "expected_use_case": "Predictive maintenance scheduling and downtime prevention"
+    },
+    {
+      "id": 2,
+      "title": "Equipment currently in fault status",
+      "description": "List all faulted equipment across all facilities",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "status eq 'fault'",
+        "top": 50
+      },
+      "expected_use_case": "Emergency response and production impact assessment"
+    },
+    {
+      "id": 3,
+      "title": "Semantic search for overheating alerts",
+      "description": "AI-powered search for temperature-related issues",
+      "tool": "search_semantic",
+      "parameters": {
+        "search_text": "overheating high temperature thermal issues",
+        "top": 20
+      },
+      "expected_use_case": "Pattern detection in thermal anomalies"
+    },
+    {
+      "id": 4,
+      "title": "Equipment by facility location",
+      "description": "Query all equipment in Plant A - Austin TX",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "facility eq 'Plant A - Austin TX'",
+        "top": 100
+      },
+      "expected_use_case": "Facility-specific asset management"
+    },
+    {
+      "id": 5,
+      "title": "Equipment due for maintenance",
+      "description": "Find equipment with maintenance due in next 7 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.nextMaintenanceDue != null"
+      },
+      "expected_use_case": "Maintenance planning and resource allocation"
+    },
+    {
+      "id": 6,
+      "title": "Low efficiency equipment",
+      "description": "Find equipment with quality efficiency below 80%",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.qualityMetrics.efficiency < 0.80"
+      },
+      "expected_use_case": "Production optimization and quality improvement"
+    },
+    {
+      "id": 7,
+      "title": "CNC machines performance",
+      "description": "Query all CNC machines and their telemetry",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "CNC Machine",
+        "filter": null,
+        "top": 50
+      },
+      "expected_use_case": "Equipment-type specific monitoring"
+    },
+    {
+      "id": 8,
+      "title": "High power consumption equipment",
+      "description": "Identify energy-intensive equipment",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.telemetry.powerConsumption > 500"
+      },
+      "expected_use_case": "Energy management and cost optimization"
+    },
+    {
+      "id": 9,
+      "title": "AI equipment diagnostics",
+      "description": "Generate intelligent insights from equipment data",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are a manufacturing equipment diagnostic AI. Analyze telemetry and provide actionable insights."},
+          {"role": "user", "content": "Analyze recent equipment failures and suggest preventive measures"}
+        ]
+      },
+      "expected_use_case": "AI-assisted diagnostics and recommendations"
+    },
+    {
+      "id": 10,
+      "title": "Recent equipment installations",
+      "description": "Find equipment installed in last 90 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.installDate != null ORDER BY c.installDate DESC"
+      },
+      "expected_use_case": "New equipment monitoring and warranty tracking"
+    }
+  ]
+}

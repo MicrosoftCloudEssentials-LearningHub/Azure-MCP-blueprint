@@ -1,0 +1,111 @@
+{
+  "example_queries": [
+    {
+      "id": 1,
+      "title": "High consumption meters",
+      "description": "Meters with usage above 1000 kWh",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.consumption.current > 1000 ORDER BY c.consumption.current DESC"
+      },
+      "expected_use_case": "Large consumer monitoring and demand response"
+    },
+    {
+      "id": 2,
+      "title": "Smart meters with alerts",
+      "description": "Active alerts on smart grid",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE ARRAY_LENGTH(c.alerts) > 0"
+      },
+      "expected_use_case": "Grid maintenance and outage prevention"
+    },
+    {
+      "id": 3,
+      "title": "Solar generation customers",
+      "description": "Meters with solar power generation",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.solarGeneration > 0"
+      },
+      "expected_use_case": "Renewable energy tracking and net metering"
+    },
+    {
+      "id": 4,
+      "title": "Power quality issues",
+      "description": "Meters with voltage or frequency anomalies",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.powerQuality.voltage < 110 OR c.powerQuality.voltage > 130"
+      },
+      "expected_use_case": "Power quality monitoring and grid stability"
+    },
+    {
+      "id": 5,
+      "title": "Meters by service zone",
+      "description": "All meters in specific distribution zone",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "zone eq 'North District'",
+        "top": 200
+      },
+      "expected_use_case": "Regional load balancing"
+    },
+    {
+      "id": 6,
+      "title": "Commercial meters",
+      "description": "All commercial/industrial accounts",
+      "tool": "search_documents",
+      "parameters": {
+        "search_text": "",
+        "filter": "meterType eq 'Commercial'",
+        "top": 150
+      },
+      "expected_use_case": "Business customer analytics"
+    },
+    {
+      "id": 7,
+      "title": "Recent outage history",
+      "description": "Meters with outages in last 30 days",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE ARRAY_LENGTH(c.outageHistory) > 0"
+      },
+      "expected_use_case": "Reliability metrics and service improvement"
+    },
+    {
+      "id": 8,
+      "title": "High carbon offset accounts",
+      "description": "Customers with significant green energy contribution",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.carbonOffset > 500 ORDER BY c.carbonOffset DESC"
+      },
+      "expected_use_case": "Sustainability reporting and incentive programs"
+    },
+    {
+      "id": 9,
+      "title": "AI energy optimization",
+      "description": "Generate consumption pattern insights",
+      "tool": "openai_chat_completion",
+      "parameters": {
+        "messages": [
+          {"role": "system", "content": "You are an energy efficiency AI. Analyze consumption patterns and provide optimization recommendations."},
+          {"role": "user", "content": "Analyze peak demand patterns and suggest load shifting strategies"}
+        ]
+      },
+      "expected_use_case": "Demand-side management and efficiency programs"
+    },
+    {
+      "id": 10,
+      "title": "Peak demand periods",
+      "description": "Meters with highest peak demand",
+      "tool": "cosmos_query_items",
+      "parameters": {
+        "query": "SELECT * FROM c WHERE c.peakDemand > 50 ORDER BY c.peakDemand DESC"
+      },
+      "expected_use_case": "Peak shaving and capacity planning"
+    }
+  ]
+}
