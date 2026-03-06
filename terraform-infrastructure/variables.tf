@@ -69,7 +69,7 @@ variable "enable_sample_data" {
 
 variable "sample_data_size_gb" {
   type        = number
-  description = "Size of sample data in GB (recommended: 50GB for enterprise demo)"
+  description = "Target sample data size in GB for enterprise demo scenarios. Note: current automation uploads a template-driven record count and does not guarantee an on-disk size (e.g., 50GB)."
   default     = 50
 
   validation {

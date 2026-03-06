@@ -29,7 +29,7 @@ Last updated: 2026-03-05
 - **Search Index**: `healthcare-index`
 
 **Data Schema**:
-- Patient demographics (name, DOB, gender, blood type)
+- Patient demographics (name, DOB (date of birth), gender, blood type)
 - Medical history and chronic conditions
 - Medications and allergies
 - Insurance and emergency contacts

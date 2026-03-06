@@ -282,7 +282,7 @@ output "troubleshooting" {
 
 output "deployment_complete_message" {
   description = "Success message with Terraform-only guidance"
-  value = <<-EOT
+  value       = <<-EOT
     
     🎉 Azure MCP Blueprint Deployment Complete!
     

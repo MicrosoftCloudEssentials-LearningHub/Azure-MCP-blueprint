@@ -105,50 +105,82 @@ class AzureServicesManager:
     
     def _initialize_services(self):
         """Initialize Azure service clients based on environment configuration"""
+        # IMPORTANT: initialize each service independently. If Cosmos fails (e.g., RBAC propagation),
+        # Search/OpenAI should still initialize so the server stays partially functional.
+        self._ensure_cosmos()
+        self._ensure_search()
+        self._ensure_openai()
+
+    def refresh_missing(self) -> None:
+        """Retry initialization for any missing service clients.
+
+        Useful in cloud deployments where role assignments or secrets may take time to propagate.
+        """
+        if self.cosmos_client is None:
+            self._ensure_cosmos()
+        if self.search_client is None:
+            self._ensure_search()
+        if self.openai_client is None:
+            self._ensure_openai()
+
+    def _ensure_cosmos(self) -> None:
+        if self.cosmos_client is not None:
+            return
+        cosmos_endpoint = os.getenv("COSMOS_ENDPOINT")
+        cosmos_key = os.getenv("COSMOS_KEY")
+        if not cosmos_endpoint:
+            return
         try:
-            # Initialize Cosmos DB
-            cosmos_endpoint = os.getenv('COSMOS_ENDPOINT')
-            cosmos_key = os.getenv('COSMOS_KEY')
-            if cosmos_endpoint:
-                cosmos_credential = cosmos_key if cosmos_key else self.credential
-                self.cosmos_client = CosmosClient(url=cosmos_endpoint, credential=cosmos_credential)
-                logger.info("Cosmos DB client initialized")
-            
-            # Initialize Azure AI Search
-            search_endpoint = os.getenv('SEARCH_ENDPOINT')
-            search_admin_key = os.getenv('SEARCH_ADMIN_KEY') or os.getenv('SEARCH_KEY')
-            search_index_name = os.getenv('SEARCH_INDEX_NAME', 'mcp-index')
-            if search_endpoint:
-                search_credential = AzureKeyCredential(search_admin_key) if search_admin_key else self.credential
-                self.search_client = SearchClient(
-                    endpoint=search_endpoint,
-                    index_name=search_index_name,
-                    credential=search_credential
-                )
-                logger.info("Azure AI Search client initialized")
-            
-            # Initialize Azure OpenAI
-            openai_endpoint = os.getenv('OPENAI_ENDPOINT') or os.getenv('FOUNDRY_ENDPOINT')
-            openai_api_key = os.getenv('OPENAI_API_KEY') or os.getenv('FOUNDRY_API_KEY')
-            if openai_endpoint:
-                if openai_api_key and openai_api_key.strip().lower() != "managed_identity":
-                    self.openai_client = openai.AzureOpenAI(
-                        azure_endpoint=openai_endpoint,
-                        api_key=openai_api_key,
-                        api_version="2024-08-01-preview",
-                    )
-                else:
-                    self.openai_client = openai.AzureOpenAI(
-                        azure_endpoint=openai_endpoint,
-                        azure_ad_token_provider=lambda: self.credential.get_token(
-                            "https://cognitiveservices.azure.com/.default"
-                        ).token,
-                        api_version="2024-08-01-preview",
-                    )
-                logger.info("Azure OpenAI client initialized")
-        
+            cosmos_credential = cosmos_key if cosmos_key else self.credential
+            self.cosmos_client = CosmosClient(url=cosmos_endpoint, credential=cosmos_credential)
+            logger.info("Cosmos DB client initialized")
         except Exception as e:
-            logger.error(f"Error initializing Azure services: {e}")
+            logger.error(f"Cosmos DB init failed: {e}")
+
+    def _ensure_search(self) -> None:
+        if self.search_client is not None:
+            return
+        search_endpoint = os.getenv("SEARCH_ENDPOINT")
+        search_admin_key = os.getenv("SEARCH_ADMIN_KEY") or os.getenv("SEARCH_KEY")
+        search_index_name = os.getenv("SEARCH_INDEX_NAME", "mcp-index")
+        if not search_endpoint:
+            return
+        try:
+            search_credential = AzureKeyCredential(search_admin_key) if search_admin_key else self.credential
+            self.search_client = SearchClient(
+                endpoint=search_endpoint,
+                index_name=search_index_name,
+                credential=search_credential,
+            )
+            logger.info("Azure AI Search client initialized")
+        except Exception as e:
+            logger.error(f"Azure AI Search init failed: {e}")
+
+    def _ensure_openai(self) -> None:
+        if self.openai_client is not None:
+            return
+        openai_endpoint = os.getenv("OPENAI_ENDPOINT") or os.getenv("FOUNDRY_ENDPOINT")
+        openai_api_key = os.getenv("OPENAI_API_KEY") or os.getenv("FOUNDRY_API_KEY")
+        if not openai_endpoint:
+            return
+        try:
+            if openai_api_key and openai_api_key.strip().lower() != "managed_identity":
+                self.openai_client = openai.AzureOpenAI(
+                    azure_endpoint=openai_endpoint,
+                    api_key=openai_api_key,
+                    api_version="2024-08-01-preview",
+                )
+            else:
+                self.openai_client = openai.AzureOpenAI(
+                    azure_endpoint=openai_endpoint,
+                    azure_ad_token_provider=lambda: self.credential.get_token(
+                        "https://cognitiveservices.azure.com/.default"
+                    ).token,
+                    api_version="2024-08-01-preview",
+                )
+            logger.info("Azure OpenAI client initialized")
+        except Exception as e:
+            logger.error(f"Azure OpenAI init failed: {e}")
 
 # =============================================================================
 # MCP SERVER IMPLEMENTATION
@@ -381,6 +413,10 @@ class MCPServer:
     
     async def _health_check(self) -> MCPResponse:
         """Health check implementation"""
+        # Retry initialization opportunistically. This helps in cloud deployments
+        # where managed identity permissions and secret resolution can take time.
+        self.azure_services.refresh_missing()
+
         status = {
             "server": "healthy",
             "timestamp": asyncio.get_event_loop().time(),
