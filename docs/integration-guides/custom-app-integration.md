@@ -10,6 +10,22 @@ Last updated: 2026-03-06
 ----------
 > This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Quick Start (Python)](#quick-start-python)
+- [Advanced Integration Examples](#advanced-integration-examples)
+- [Node.js/TypeScript Integration](#nodejstypescript-integration)
+- [Authentication Options](#authentication-options)
+- [Error Handling](#error-handling)
+- [Best Practices](#best-practices)
+- [Sample Applications](#sample-applications)
+- [Next Steps](#next-steps)
+
+</details>
+
 ## Overview
 
 Perfect for building AI-powered applications with direct MCP tool access.

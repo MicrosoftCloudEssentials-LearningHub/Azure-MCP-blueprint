@@ -29,6 +29,18 @@ Last updated: 2026-03-06
 > [!NOTE]
 > Configuration Options: Customize, and choose your hosting service by editing [terraform.tfvars](./terraform-infrastructure/terraform.tfvars).
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [What MCP Really Is?](#what-mcp-really-is)
+- [What gets deployed](#what-gets-deployed)
+- [Industry Templates (10 Available)](#industry-templates-10-available)
+- [Features](#features)
+- [Pre-Built AI Agent Samples](#pre-built-ai-agent-samples)
+- [MCP Tools Available](#mcp-tools-available)
+
+</details>
+
 ```hcl
 # Choose your industry template
 selected_industry = "healthcare"  # Options: healthcare, retail, finance, manufacturing, education, logistics, insurance, hospitality, energy, realestate

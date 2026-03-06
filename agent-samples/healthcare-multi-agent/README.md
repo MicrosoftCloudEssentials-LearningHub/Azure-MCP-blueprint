@@ -10,6 +10,24 @@ Last updated: 2026-03-06
 ----------
 > Production-ready multi-agent AI system for healthcare data management with MCP integration.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Architecture](#architecture)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Usage Examples](#usage-examples)
+- [Agent Definitions](#agent-definitions)
+- [Model Router Logic](#model-router-logic)
+- [Cost Analysis](#cost-analysis)
+- [Error Handling](#error-handling)
+- [Monitoring](#monitoring)
+- [Deployment](#deployment)
+- [Next Steps](#next-steps)
+
+</details>
+
 ## Architecture
 
 ```

@@ -5,10 +5,18 @@ Costa Rica
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-05
+Last updated: 2026-03-06
 
 ----------
 > Minimal Python client for calling the MCP server endpoints exposed by this blueprint.
+
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Setup](#setup)
+- [Usage](#usage)
+
+</details>
 
 ## Setup
 

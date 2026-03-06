@@ -10,6 +10,20 @@ Last updated: 2026-03-06
 ----------
 > This blueprint supports running the MCP server in multiple ways.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [What this repo deploys](#what-this-repo-deploys)
+- [Standard configuration contract (env vars)](#standard-configuration-contract-env-vars)
+- [Secrets best practices](#secrets-best-practices)
+- [Observability best practices](#observability-best-practices)
+- [Deployment options](#deployment-options)
+- [Data modeling & Cosmos DB best practices (when using Cosmos)](#data-modeling--cosmos-db-best-practices-when-using-cosmos)
+- [Validation](#validation)
+- [Common pitfalls (and how this blueprint avoids them)](#common-pitfalls-and-how-this-blueprint-avoids-them)
+
+</details>
+
 ## What this repo deploys
 
 - **MCP Server**: [src/mcp-server/main.py](../src/mcp-server/main.py) (FastAPI + HTTP transport)

@@ -5,11 +5,20 @@ Costa Rica
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-05
+Last updated: 2026-03-06
 
 ----------
 
 > This approach focuses on `setting up the required infrastructure via Terraform`. It allows for source control of not only the solution code, connections, and setups `but also the infrastructure itself`.
+
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Prerequisites](#prerequisites)
+- [Overview](#overview)
+- [How to execute it](#how-to-execute-it)
+
+</details>
 
 <div align="center">
   <img src="" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>

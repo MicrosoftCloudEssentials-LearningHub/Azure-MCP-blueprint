@@ -11,6 +11,13 @@ Last updated: 2026-03-06
 
 > This directory contains pre-configured industry templates for the MCP Blueprint. Each template includes:
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Available Templates](#available-templates)
+
+</details>
+
 - **50,000 sample records** with realistic, industry-specific data
 - **10 example queries** demonstrating common use cases  
 - **Cosmos DB schema** with partition key strategy
