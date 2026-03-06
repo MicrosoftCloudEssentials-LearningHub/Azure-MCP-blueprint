@@ -10,6 +10,14 @@ Last updated: 2026-03-05
 ----------
 > Beginner-friendly sample that calls MCP tools over HTTP.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Setup](#setup)
+- [Run](#run)
+
+</details>
+
 ## Setup
 
 ```bash

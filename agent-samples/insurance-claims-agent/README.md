@@ -10,6 +10,14 @@ Last updated: 2026-03-05
 ----------
 > Insurance-focused sample agent that calls MCP tools over HTTP.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Setup](#setup)
+- [Run](#run)
+
+</details>
+
 It works best when Azure AI Search is enabled (uses `search_semantic` / `search_documents`). If Azure OpenAI is enabled on the MCP server, it will also use `openai_chat_completion` for routing/summaries.
 
 ## Setup

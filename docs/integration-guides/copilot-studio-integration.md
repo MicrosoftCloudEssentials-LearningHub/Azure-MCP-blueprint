@@ -10,6 +10,22 @@ Last updated: 2026-03-06
 ----------
 > Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Overview](#overview)
+- [What You'll Build](#what-youll-build)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Advanced Features](#advanced-features)
+- [Industry Templates](#industry-templates)
+- [Best Practices](#best-practices)
+- [Troubleshooting](#troubleshooting)
+- [Sample Copilot Export](#sample-copilot-export)
+- [Next Steps](#next-steps)
+
+</details>
+
 ## Overview
 
 Perfect for business users and citizen developers.

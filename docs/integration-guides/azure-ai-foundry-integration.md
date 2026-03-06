@@ -10,6 +10,22 @@ Last updated: 2026-03-06
 ----------
 > This guide demonstrates how to integrate your MCP Server with Azure AI Foundry to build sophisticated multi-agent AI applications.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Overview](#overview)
+- [Architecture Pattern](#architecture-pattern)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Industry-Specific Multi-Agent Setups](#industry-specific-multi-agent-setups)
+- [Model Router Pattern](#model-router-pattern)
+- [Deployment to Azure](#deployment-to-azure)
+- [Best Practices](#best-practices)
+- [Complete Example](#complete-example)
+- [Next Steps](#next-steps)
+
+</details>
+
 ## Overview
 
 Includes model routing, agent orchestration, and agentic workflows.

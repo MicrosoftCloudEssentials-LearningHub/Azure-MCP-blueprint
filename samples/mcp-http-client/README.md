@@ -10,6 +10,14 @@ Last updated: 2026-03-05
 ----------
 > Minimal Python client for calling the MCP server endpoints exposed by this blueprint.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [Setup](#setup)
+- [Usage](#usage)
+
+</details>
+
 ## Setup
 
 ```bash
