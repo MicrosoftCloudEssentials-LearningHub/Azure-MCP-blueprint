@@ -16,9 +16,9 @@ Last updated: 2026-03-05
 - [Blueprint Overview](../README.md)
 - [Deployment & Configuration](../docs/deployment-and-configuration.md)
 - Integration guides:
-    - [Azure AI Foundry](../docs/integration-guides/azure-ai-foundry-integration.md)
-    - [Microsoft Copilot Studio](../docs/integration-guides/copilot-studio-integration.md)
-    - [Custom App](../docs/integration-guides/custom-app-integration.md)
+  - [Azure AI Foundry](../docs/integration-guides/azure-ai-foundry-integration.md)
+  - [Microsoft Copilot Studio](../docs/integration-guides/copilot-studio-integration.md)
+  - [Custom App](../docs/integration-guides/custom-app-integration.md)
 - [MCP HTTP Client (Sample)](../samples/mcp-http-client/)
 
 </details>
@@ -103,6 +103,7 @@ python main.py --demo
 **Scenario**: Medical records management with compliance checks
 
 **Agents:**
+
 1. **Triage Agent** (gpt-4o-mini) - Routes patient queries
 2. **Clinical Data Agent** (gpt-4o-mini) - Queries patient records
 3. **Diagnostic Agent** (gpt-4o) - Generates medical insights
@@ -137,6 +138,7 @@ User: "Find all diabetic patients with recent lab results and generate a clinica
 <summary><strong>2. Retail Shopping Assistant</strong></summary>
 
 **Agents:**
+
 1. **Cora** (Shopper Agent) - General queries
 2. **Product Specialist** - Product details & comparisons
 3. **Inventory Manager** - Stock checks
@@ -160,6 +162,7 @@ User: "Find all diabetic patients with recent lab results and generate a clinica
 <summary><strong>3. Financial Advisor</strong></summary>
 
 **Agents:**
+
 1. **Account Manager** - Account inquiries
 2. **Fraud Detector** - Risk assessment
 3. **Investment Advisor** - Financial planning

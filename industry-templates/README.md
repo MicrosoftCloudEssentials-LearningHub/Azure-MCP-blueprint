@@ -29,6 +29,7 @@ Last updated: 2026-03-06
 - **Search Index**: `healthcare-index`
 
 **Data Schema**:
+
 - Patient demographics (name, DOB (date of birth), gender, blood type)
 - Medical history and chronic conditions
 - Medications and allergies
@@ -36,6 +37,7 @@ Last updated: 2026-03-06
 - Lab results and vaccinations
 
 **Example Queries**:
+
 - Find patients with specific conditions (diabetes, hypertension)
 - Search by blood type for emergency scenarios
 - Query patients by physician or insurance provider
@@ -54,6 +56,7 @@ Last updated: 2026-03-06
 - **Search Index**: `retail-index`
 
 **Data Schema**:
+
 - Transaction details (ID, date, amount, status)
 - Customer information and loyalty points
 - Product items with categories and SKUs
@@ -61,6 +64,7 @@ Last updated: 2026-03-06
 - Payment method and promotion codes
 
 **Example Queries**:
+
 - High-value transaction analysis (>$500)
 - Product category performance tracking
 - Customer purchase history retrieval
@@ -79,6 +83,7 @@ Last updated: 2026-03-06
 - **Search Index**: `finance-index`
 
 **Data Schema**:
+
 - Transaction details (type, amount, timestamp)
 - Account and customer information
 - Merchant name and category
@@ -86,6 +91,7 @@ Last updated: 2026-03-06
 - Fraud score and risk indicators
 
 **Example Queries**:
+
 - Fraud detection (high fraud scores)
 - AML compliance (large withdrawals >$10K)
 - International transaction monitoring

@@ -11,6 +11,7 @@ Last updated: 2026-03-05
 > Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access.
 
 ## Overview
+
 Perfect for business users and citizen developers.
 
 ## What You'll Build
@@ -53,7 +54,7 @@ Perfect for business users and citizen developers.
 <details>
 <summary><strong>Step 3: Add MCP Server as Action</strong></summary>
 
-#### Option A: OpenAPI Connector (Recommended)
+### Option A: OpenAPI Connector (Recommended)
 
 1. In your Copilot, go to **Actions** tab
 2. Click **+ Add an action**
@@ -137,7 +138,7 @@ paths:
 6. **Create connection**: Add authentication (API key or none)
 7. **Save connector**
 
-#### Option B: Power Automate Flow
+### Option B: Power Automate Flow
 
 1. Go to **Actions** → **Add an action**
 2. Select **Create a flow**
@@ -168,7 +169,7 @@ Response: Return to Copilot
 <details>
 <summary><strong>Step 4: Configure Topics with MCP Tools</strong></summary>
 
-#### Example: Healthcare Patient Lookup
+### Example: Healthcare Patient Lookup
 
 1. Go to **Topics** tab
 2. Click **+ New topic** → **From blank**
@@ -217,40 +218,46 @@ Node 5: Question - Follow-up
 <details>
 <summary><strong>Step 5: Industry-Specific Topics</strong></summary>
 
-#### Healthcare Topics
+### Healthcare Topics
 
-**Topic: Medication Lookup**
+#### Medication Lookup
+
 - Trigger: "What medications is patient taking?"
 - Action: `cosmos_query_items` → `SELECT c.medications FROM c WHERE c.patientId = '{patientId}'`
 
-**Topic: Allergy Check**
+#### Allergy Check
+
 - Trigger: "Check patient allergies"
 - Action: `search_documents` with filter on allergies field
 
-#### Retail Topics
+### Retail Topics
 
-**Topic: Product Search**
+#### Product Search
+
 - Trigger: "Find product"
 - Action: `search_documents` → search product catalog
 
-**Topic: Inventory Check**
+#### Inventory Check
+
 - Trigger: "Check stock availability"
 - Action: `cosmos_query_items` → query inventory
 
-#### Finance Topics
+### Finance Topics
 
-**Topic: Transaction Search**
+#### Transaction Search
+
 - Trigger: "Show my transactions"
 - Action: `cosmos_query_items` → filter by account
 
-**Topic: Fraud Alert**
+#### Fraud Alert
+
 - Trigger: "Check for suspicious activity"
 - Action: `cosmos_query_items` → filter by fraud score > 0.7
 
 </details>
 
 <details>
-<summary><strong>Step 6: Add Generative Answers</strong></summary>
+### Publish to Demo Website
 
 Enable generative responses powered by MCP data:
 
@@ -300,14 +307,14 @@ Always maintain data privacy and security.
 <details>
 <summary><strong>Step 8: Publish</strong></summary>
 
-#### Publish to Demo Website
+### Publish to Demo Website
 
 1. Go to **Publish** tab
 2. Click **Publish**
 3. Select **Demo website**
 4. Share link: `https://your-copilot.powerapps.com/...`
 
-#### Publish to Microsoft Teams
+### Publish to Microsoft Teams
 
 1. Go to **Publish** tab
 2. Click **Publish**
@@ -319,7 +326,7 @@ Always maintain data privacy and security.
 5. **Submit for approval** (if required)
 6. **Install in Teams**
 
-#### Embed in Website
+### Embed in Website
 
 ```html
 <!DOCTYPE html>
@@ -361,7 +368,7 @@ Always maintain data privacy and security.
 <details>
 <summary><strong>Authentication & Security</strong></summary>
 
-#### Azure AD Authentication
+### Azure AD Authentication
 
 1. In **Settings** → **Security**
 2. Enable **Authentication**
@@ -371,7 +378,7 @@ Always maintain data privacy and security.
    - Client ID
    - Redirect URI
 
-#### Row-Level Security
+### Row-Level Security
 
 ```yaml
 # In MCP Server, implement user-scoped queries
@@ -415,6 +422,7 @@ def get_user_data(user_id: str, query: str):
 <summary><strong>Healthcare Copilot</strong></summary>
 
 **Topics:**
+
 1. Patient Lookup
 2. Medication History
 3. Appointment Scheduling
@@ -444,6 +452,7 @@ Copilot: [Calls cosmos_query_items]
 <summary><strong>Retail Copilot</strong></summary>
 
 **Topics:**
+
 1. Product Search
 2. Inventory Status
 3. Order Tracking
@@ -456,6 +465,7 @@ Copilot: [Calls cosmos_query_items]
 <summary><strong>Finance Copilot</strong></summary>
 
 **Topics:**
+
 1. Account Balance
 2. Transaction History
 3. Fraud Alerts
@@ -480,6 +490,7 @@ Copilot: [Calls cosmos_query_items]
 **Problem**: Connector fails to connect
 
 **Solution**:
+
 - Verify MCP endpoint URL is public
 - Check CORS settings on MCP server
 - Test endpoint with Postman first
@@ -492,6 +503,7 @@ Copilot: [Calls cosmos_query_items]
 **Problem**: Tool returns error
 
 **Solution**:
+
 - Validate argument schema
 - Check MCP server logs
 - Verify Azure service connectivity
@@ -501,6 +513,7 @@ Copilot: [Calls cosmos_query_items]
 ## Sample Copilot Export
 
 See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
+
 - Healthcare Assistant (.zip export)
 - Retail Assistant (.zip export)
 - Finance Assistant (.zip export)

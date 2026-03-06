@@ -37,9 +37,9 @@ locals {
   }
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CORE AZURE INFRASTRUCTURE
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Resource Group
 resource "azurerm_resource_group" "main" {
@@ -132,9 +132,9 @@ resource "azurerm_key_vault_access_policy" "managed_identity" {
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CONTAINER REGISTRY FOR AUTOMATED BUILDS
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Azure Container Registry
 resource "azurerm_container_registry" "main" {
@@ -268,9 +268,9 @@ resource "azurerm_storage_container" "sample_documents" {
   container_access_type = "private"
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # AI SERVICES INFRASTRUCTURE
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Microsoft Foundry (formerly Azure OpenAI)
 resource "azurerm_cognitive_account" "foundry" {
@@ -350,9 +350,9 @@ resource "time_sleep" "foundry_service_ready" {
   create_duration = "60s" # Wait 1 minute for Foundry service to be ready
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # KEY VAULT SECRETS
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Cosmos DB connection string
 resource "azurerm_key_vault_secret" "cosmos_connection_string" {
@@ -496,9 +496,9 @@ resource "azurerm_cosmosdb_sql_container" "main" {
   depends_on = [azurerm_cosmosdb_sql_database.main]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CONTAINER APPS DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Container Apps Environment
 resource "azurerm_container_app_environment" "main" {
@@ -761,9 +761,9 @@ resource "null_resource" "refresh_container_app_image" {
   }
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # AZURE FUNCTIONS DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Storage Account for Functions
 resource "azurerm_storage_account" "functions" {
@@ -834,9 +834,9 @@ resource "azurerm_linux_function_app" "mcp_server" {
   tags = local.common_tags
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # APP SERVICE DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # App Service Plan
 resource "azurerm_service_plan" "app_service" {
@@ -891,9 +891,9 @@ resource "azurerm_linux_web_app" "mcp_server" {
   tags = local.common_tags
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # ROLE ASSIGNMENTS FOR MANAGED IDENTITY
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Get the managed identity object ID based on deployment type
 locals {
@@ -973,8 +973,8 @@ resource "azurerm_role_assignment" "key_vault_secrets_user" {
 
 # Search role assignment
 resource "azurerm_role_assignment" "search_contributor" {
-  for_each             = local.search_role_needed
-  scope                = azurerm_search_service.main[0].id
+  for_each = local.search_role_needed
+  scope    = azurerm_search_service.main[0].id
   # Data-plane role for Entra ID auth to query indexes if API keys are not used.
   role_definition_name = "Search Index Data Contributor"
   principal_id = (
@@ -991,14 +991,14 @@ resource "azurerm_role_assignment" "search_contributor" {
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # MCP SERVER DEPLOYMENT AUTOMATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Build and deploy MCP server
-# =============================================================================
+# -----------------------------------------------------------------------------
 # POST-DEPLOYMENT VALIDATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Validate MCP server deployment
 resource "null_resource" "validate_deployment" {
@@ -1073,9 +1073,9 @@ locals {
   )
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # SAMPLE DATA DEPLOYMENT AUTOMATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Deploy sample data for enterprise demonstration
 resource "null_resource" "deploy_sample_data" {
@@ -1127,8 +1127,8 @@ resource "null_resource" "deploy_sample_data" {
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CLI INTEGRATION - AUTO-TRIGGER AFTER DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # CLI integration removed: Terraform apply should finish without launching interactive tooling.

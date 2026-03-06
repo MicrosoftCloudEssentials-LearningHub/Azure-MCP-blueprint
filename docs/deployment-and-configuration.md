@@ -97,6 +97,7 @@ This is the only path in this repo that is currently **end-to-end automated** vi
    - `terraform apply -auto-approve`
 
 Notes:
+
 - The container image is built in Azure using **ACR Tasks** (`az acr build`).
 - The Container App is configured with Key Vault-backed secrets.
 
@@ -140,6 +141,7 @@ Terraform can provision the Function App + Key Vault + dependent services, but c
 - Tool execution: `POST /mcp/execute`
 
 You can also run the built-in validator:
+
 - [scripts/validate-mcp.py](../scripts/validate-mcp.py)
 
 ## Common pitfalls (and how this blueprint avoids them)

@@ -11,6 +11,7 @@ Last updated: 2026-03-05
 > This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK.
 
 ## Overview
+
 Perfect for building AI-powered applications with direct MCP tool access.
 
 ## Prerequisites
@@ -442,6 +443,7 @@ async def robust_tool_call(mcp: MCPClient, tool_name: str, args: dict, retries=3
 ## Sample Applications
 
 See [`/agent-samples`](../../agent-samples) directory for complete examples:
+
 - Healthcare Patient Assistant
 - Retail Product Recommendation Engine
 - Financial Transaction Monitor

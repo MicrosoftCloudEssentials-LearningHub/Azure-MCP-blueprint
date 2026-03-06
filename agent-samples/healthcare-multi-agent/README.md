@@ -96,6 +96,7 @@ print(result)
 ```
 
 **Output:**
+
 ```
 Routing Plan: 
   Primary Intent: clinical_research
