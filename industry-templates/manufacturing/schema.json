@@ -55,6 +55,12 @@
       "content": ["alerts", "equipmentType"]
     }
   },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "openai_chat_completion",
+    "search_documents",
+    "search_semantic"
+  ],
   "sample_data_config": {
     "record_count": 100000,
     "equipment_types": ["CNC Machine", "Robotic Arm", "Conveyor Belt", "Assembly Station", "Quality Inspection Unit", "Packaging System"],
