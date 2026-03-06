@@ -65,6 +65,12 @@ This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
 - `APPLICATIONINSIGHTS_CONNECTION_STRING` (recommended)
 - `SELECTED_INDUSTRY` (used to keep infra + data consistent)
 
+- `MCP_API_KEY` *(optional)*
+  - If set, requests to `POST /mcp` must include this value in the header specified by `MCP_API_KEY_HEADER`.
+- `MCP_API_KEY_HEADER` *(optional, default: `x-api-key`)*
+- `MCP_ALLOWED_ORIGINS` *(optional)*
+  - Comma-separated allowlist for the `Origin` header (DNS rebinding protection). If unset and an `Origin` header is present, the request is rejected.
+
 </details>
 
 ## Secrets best practices
@@ -134,11 +140,13 @@ Terraform can provision the Function App + Key Vault + dependent services, but c
 ## Validation
 
 - Health endpoint: `GET /health`
-- MCP discovery:
+- MCP Streamable (recommended for Copilot Studio):
+  - `POST /mcp` (JSON-RPC: `initialize`, `tools/list`, `tools/call`, ...)
+- Legacy HTTP endpoints (kept for backward compatibility):
   - `GET /mcp/tools`
   - `GET /mcp/resources`
   - `GET /mcp/prompts`
-- Tool execution: `POST /mcp/execute`
+  - `POST /mcp/execute`
 
 You can also run the built-in validator:
 

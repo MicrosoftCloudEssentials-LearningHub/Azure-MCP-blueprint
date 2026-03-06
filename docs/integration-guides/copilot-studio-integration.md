@@ -52,117 +52,50 @@ Perfect for business users and citizen developers.
 </details>
 
 <details>
-<summary><strong>Step 3: Add MCP Server as Action</strong></summary>
+<summary><strong>Step 3: Add MCP Server as Tool</strong></summary>
 
-### Option A: OpenAPI Connector (Recommended)
+### Option A (Recommended): MCP onboarding wizard
 
-1. In your Copilot, go to **Actions** tab
-2. Click **+ Add an action**
-3. Select **Custom connector**
-4. Choose **Create from blank**
+Copilot Studio supports connecting directly to an MCP server using the **Model Context Protocol** tool type.
 
-**Configure MCP Connector:**
+1. In your Copilot, go to the **Tools** page
+2. Select **Add a tool** → **New tool**
+3. Select **Model Context Protocol**
+4. Enter:
+   - **Server URL**: `https://your-mcp.azurecontainerapps.io/mcp`
+   - **Authentication**: None, API key, or OAuth 2.0
+
+Notes:
+
+- Copilot Studio currently supports the **Streamable** transport type for MCP.
+- This repo’s MCP server exposes a standards-based Streamable endpoint at `POST /mcp` (JSON-RPC).
+
+### Option B: Custom connector (MCP Streamable)
+
+If you need to manage the connection via Power Apps, create a custom connector using a minimal OpenAPI schema that points to `POST /mcp` and includes the MCP protocol marker.
 
 ```yaml
-# MCP Server OpenAPI Specification
-openapi: 3.0.0
+swagger: '2.0'
 info:
-  title: MCP Server API
+  title: Azure MCP Blueprint
+  description: MCP Streamable endpoint for Copilot Studio
   version: 1.0.0
-  description: Model Context Protocol server with Azure service integration
-
-servers:
-  - url: https://your-mcp.azurecontainerapps.io
-    description: MCP Server endpoint
-
+host: your-mcp.azurecontainerapps.io
+basePath: /
+schemes:
+  - https
 paths:
-  /mcp/tools:
-    get:
-      summary: List available tools
-      operationId: listTools
-      responses:
-        '200':
-          description: List of MCP tools
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  tools:
-                    type: array
-                    items:
-                      type: object
-
-  /mcp/tools/{toolName}:
+  /mcp:
     post:
-      summary: Execute MCP tool
-      operationId: executeTool
-      parameters:
-        - name: toolName
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                arguments:
-                  type: object
+      summary: MCP Streamable endpoint
+      x-ms-agentic-protocol: mcp-streamable-1.0
+      operationId: InvokeMCP
       responses:
         '200':
-          description: Tool execution result
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  content:
-                    type: object
-                  isError:
-                    type: boolean
-
-  /health:
-    get:
-      summary: Health check
-      operationId: healthCheck
-      responses:
-        '200':
-          description: Server health status
+          description: JSON-RPC response
+        '202':
+          description: Accepted (notifications / responses)
 ```
-
-5. **Test the connector**: Click **Test** → **Test operation**
-6. **Create connection**: Add authentication (API key or none)
-7. **Save connector**
-
-### Option B: Power Automate Flow
-
-1. Go to **Actions** → **Add an action**
-2. Select **Create a flow**
-3. Build flow in Power Automate:
-
-```
-Trigger: When Copilot receives message
-  ↓
-Action: HTTP - Call MCP Server
-  Method: POST
-  URI: https://your-mcp.azurecontainerapps.io/mcp/tools/{toolName}
-  Body: 
-    {
-      "arguments": {
-        "query": "@{triggerOutputs()?['text']}"
-      }
-    }
-  ↓
-Action: Parse JSON (MCP response)
-  ↓
-Response: Return to Copilot
-```
-
-4. **Save and publish flow**
 
 </details>
 
@@ -189,12 +122,10 @@ Node 2: Question - Get patient details
   - Save response as: patientQuery
 
 Node 3: Action - Call MCP Tool
-  - Connector: MCP Server API
-  - Operation: executeTool
-  - Tool Name: search_documents
-  - Arguments: 
+  - Tool: `search_documents`
+  - Arguments:
     {
-      "search_text": "{patientQuery}",
+      "query": "{patientQuery}",
       "top": 5
     }
   - Save response as: searchResults

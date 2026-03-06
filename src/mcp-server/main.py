@@ -11,7 +11,7 @@ import os
 from typing import Any, Dict, List, Optional
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -28,6 +28,65 @@ def _pydantic_dump(model: Any) -> Any:
     if callable(dump):
         return dump()
     return model
+
+
+def _parse_csv_env(name: str) -> list[str]:
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        return []
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def _maybe_json_dumps(value: Any) -> str:
+    if value is None:
+        return "null"
+    if isinstance(value, str):
+        return value
+    try:
+        return json.dumps(value, ensure_ascii=False)
+    except TypeError:
+        return str(value)
+
+
+def _jsonrpc_error(
+    message_id: Any,
+    code: int,
+    message: str,
+    data: Optional[Any] = None,
+) -> dict[str, Any]:
+    error: dict[str, Any] = {"code": code, "message": message}
+    if data is not None:
+        error["data"] = data
+    payload: dict[str, Any] = {"jsonrpc": "2.0", "error": error}
+    if message_id is not None:
+        payload["id"] = message_id
+    return payload
+
+
+def _jsonrpc_result(message_id: Any, result: Any) -> dict[str, Any]:
+    return {"jsonrpc": "2.0", "id": message_id, "result": result}
+
+
+def _origin_allowed(request: Request) -> bool:
+    origin = request.headers.get("origin")
+    if not origin:
+        return True
+    allowed = _parse_csv_env("MCP_ALLOWED_ORIGINS")
+    if not allowed:
+        return False
+    if "*" in allowed:
+        return True
+    return origin in allowed
+
+
+def _require_api_key_if_configured(request: Request) -> None:
+    expected = os.getenv("MCP_API_KEY")
+    if not expected:
+        return
+    header_name = os.getenv("MCP_API_KEY_HEADER", "x-api-key")
+    received = request.headers.get(header_name)
+    if received != expected:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 def _parse_enabled_tools() -> set[str]:
@@ -550,6 +609,43 @@ class MCPServer:
         except Exception as e:
             return MCPResponse(content=None, isError=True, errorMessage=f"Embeddings error: {e}")
 
+
+def _tool_to_mcp(tool: MCPTool) -> dict[str, Any]:
+    data = _pydantic_dump(tool)
+    data.setdefault("title", tool.name.replace("_", " ").title())
+    return data
+
+
+def _resource_to_mcp(resource: MCPResource) -> dict[str, Any]:
+    data = _pydantic_dump(resource)
+    data.setdefault("title", resource.name)
+    return data
+
+
+def _prompt_to_mcp(prompt: MCPPrompt) -> dict[str, Any]:
+    data = _pydantic_dump(prompt)
+    data.setdefault("title", prompt.name.replace("_", " ").title())
+    return data
+
+
+def _mcp_tool_result(response: MCPResponse) -> dict[str, Any]:
+    if response.isError:
+        return {
+            "content": [{"type": "text", "text": response.errorMessage or "Tool execution error"}],
+            "isError": True,
+        }
+
+    content = response.content
+    if content is None:
+        return {"content": [{"type": "text", "text": "null"}], "isError": False}
+    if isinstance(content, str):
+        return {"content": [{"type": "text", "text": content}], "isError": False}
+    return {
+        "content": [{"type": "text", "text": _maybe_json_dumps(content)}],
+        "structuredContent": content,
+        "isError": False,
+    }
+
 # -----------------------------------------------------------------------------
 # FASTAPI APPLICATION
 # -----------------------------------------------------------------------------
@@ -577,6 +673,229 @@ app.add_middleware(
 # API ENDPOINTS
 # -----------------------------------------------------------------------------
 
+
+@app.post("/mcp")
+async def mcp_streamable_endpoint(request: Request):
+    """MCP Streamable HTTP endpoint (JSON-RPC over HTTP).
+
+    Copilot Studio expects a single MCP endpoint (e.g., `/mcp`) that accepts JSON-RPC
+    messages via HTTP POST.
+    """
+    if not _origin_allowed(request):
+        raise HTTPException(status_code=403, detail="Forbidden")
+    _require_api_key_if_configured(request)
+
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse(
+            status_code=400,
+            content=_jsonrpc_error(None, -32600, "Invalid Request", data={"reason": "Invalid JSON"}),
+        )
+
+    messages: list[Any]
+    is_batch = isinstance(body, list)
+    if is_batch:
+        messages = body
+    elif isinstance(body, dict):
+        messages = [body]
+    else:
+        return JSONResponse(
+            status_code=400,
+            content=_jsonrpc_error(None, -32600, "Invalid Request", data={"reason": "Expected object or array"}),
+        )
+
+    protocol_version = request.headers.get("mcp-protocol-version") or "2025-03-26"
+    supported_versions = {"2025-03-26", "2025-06-18"}
+    if protocol_version not in supported_versions:
+        return JSONResponse(
+            status_code=400,
+            content=_jsonrpc_error(
+                None,
+                -32602,
+                "Unsupported protocol version",
+                data={"supported": sorted(supported_versions), "requested": protocol_version},
+            ),
+        )
+
+    responses: list[dict[str, Any]] = []
+    saw_request = False
+
+    for msg in messages:
+        if not isinstance(msg, dict) or msg.get("jsonrpc") != "2.0":
+            responses.append(_jsonrpc_error(msg.get("id") if isinstance(msg, dict) else None, -32600, "Invalid Request"))
+            saw_request = True
+            continue
+
+        method = msg.get("method")
+        message_id = msg.get("id")
+
+        # Client responses (result/error) and notifications are accepted with 202 and no body.
+        if not method:
+            continue
+
+        # Notification: no id => no response
+        if message_id is None:
+            if method == "notifications/initialized":
+                continue
+            continue
+
+        saw_request = True
+        params = msg.get("params") or {}
+        try:
+            if method == "initialize":
+                requested_version = params.get("protocolVersion")
+                negotiated = requested_version if requested_version in supported_versions else max(supported_versions)
+
+                result = {
+                    "protocolVersion": negotiated,
+                    "capabilities": {
+                        "tools": {"listChanged": False} if mcp_server.tools else {},
+                        "resources": {} if mcp_server.resources else {},
+                        "prompts": {"listChanged": False} if mcp_server.prompts else {},
+                    },
+                    "serverInfo": {
+                        "name": "azure-mcp-blueprint",
+                        "title": "Azure MCP Blueprint Server",
+                        "version": "1.0.0",
+                    },
+                    "instructions": "Use tools/list to discover tools, then tools/call to invoke them.",
+                }
+                responses.append(_jsonrpc_result(message_id, result))
+
+            elif method == "tools/list":
+                result = {
+                    "tools": [_tool_to_mcp(tool) for tool in mcp_server.tools],
+                    "nextCursor": None,
+                }
+                responses.append(_jsonrpc_result(message_id, result))
+
+            elif method == "tools/call":
+                tool_name = params.get("name")
+                if not tool_name or not isinstance(tool_name, str):
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"missing": "name"}))
+                    continue
+                registered = {t.name for t in mcp_server.tools}
+                if tool_name not in registered:
+                    responses.append(_jsonrpc_error(message_id, -32602, f"Unknown tool: {tool_name}"))
+                    continue
+                arguments = params.get("arguments")
+                if arguments is None:
+                    arguments = {}
+                if not isinstance(arguments, dict):
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"field": "arguments"}))
+                    continue
+                tool_response = await mcp_server.execute_tool(MCPToolCall(name=tool_name, arguments=arguments))
+                responses.append(_jsonrpc_result(message_id, _mcp_tool_result(tool_response)))
+
+            elif method == "resources/list":
+                result = {
+                    "resources": [_resource_to_mcp(resource) for resource in mcp_server.resources],
+                    "nextCursor": None,
+                }
+                responses.append(_jsonrpc_result(message_id, result))
+
+            elif method == "resources/read":
+                uri = params.get("uri")
+                if not uri or not isinstance(uri, str):
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"missing": "uri"}))
+                    continue
+                contents: list[dict[str, Any]] = []
+
+                if uri == "azure://mcp/server/status":
+                    health_response = await mcp_server.execute_tool(MCPToolCall(name="health_check"))
+                    contents.append(
+                        {
+                            "uri": uri,
+                            "mimeType": "application/json",
+                            "text": _maybe_json_dumps(health_response.content),
+                        }
+                    )
+                elif uri == "azure://mcp/tools/list":
+                    contents.append(
+                        {
+                            "uri": uri,
+                            "mimeType": "application/json",
+                            "text": _maybe_json_dumps({"tools": [_tool_to_mcp(tool) for tool in mcp_server.tools]}),
+                        }
+                    )
+                else:
+                    responses.append(
+                        _jsonrpc_error(message_id, -32002, "Resource not found", data={"uri": uri})
+                    )
+                    continue
+
+                responses.append(_jsonrpc_result(message_id, {"contents": contents}))
+
+            elif method == "prompts/list":
+                result = {
+                    "prompts": [_prompt_to_mcp(prompt) for prompt in mcp_server.prompts],
+                    "nextCursor": None,
+                }
+                responses.append(_jsonrpc_result(message_id, result))
+
+            elif method == "prompts/get":
+                prompt_name = params.get("name")
+                if not prompt_name or not isinstance(prompt_name, str):
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"missing": "name"}))
+                    continue
+                arguments = params.get("arguments") or {}
+                if not isinstance(arguments, dict):
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"field": "arguments"}))
+                    continue
+
+                prompt = next((p for p in mcp_server.prompts if p.name == prompt_name), None)
+                if not prompt:
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"name": prompt_name}))
+                    continue
+
+                try:
+                    rendered = prompt.template.format(**arguments)
+                except Exception as e:
+                    responses.append(_jsonrpc_error(message_id, -32602, "Invalid params", data={"reason": str(e)}))
+                    continue
+
+                responses.append(
+                    _jsonrpc_result(
+                        message_id,
+                        {
+                            "description": prompt.description,
+                            "messages": [
+                                {
+                                    "role": "user",
+                                    "content": {"type": "text", "text": rendered},
+                                }
+                            ],
+                        },
+                    )
+                )
+
+            elif method == "ping":
+                responses.append(_jsonrpc_result(message_id, {}))
+
+            else:
+                responses.append(_jsonrpc_error(message_id, -32601, f"Method not found: {method}"))
+
+        except Exception as e:
+            logger.exception("Unhandled MCP error")
+            responses.append(_jsonrpc_error(message_id, -32603, "Internal error", data={"reason": str(e)}))
+
+    if not saw_request:
+        return Response(status_code=202)
+
+    if not is_batch and len(responses) == 1:
+        return JSONResponse(content=responses[0])
+    return JSONResponse(content=responses)
+
+
+@app.get("/mcp")
+async def mcp_streamable_get(_: Request):
+    """Optional SSE stream endpoint.
+
+    Copilot Studio's MCP support is Streamable; SSE is deprecated and not required here.
+    """
+    raise HTTPException(status_code=405, detail="Method Not Allowed")
+
 @app.get("/")
 async def root():
     """Root endpoint"""
@@ -589,6 +908,7 @@ async def root():
             "resources": "/mcp/resources",
             "prompts": "/mcp/prompts",
             "execute": "/mcp/execute",
+            "mcp": "/mcp",
             "health": "/health"
         }
     }
