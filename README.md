@@ -104,7 +104,25 @@ terraform output mcp_endpoint
 
 ```bash
 curl -s "$(terraform output -raw mcp_endpoint)/health"
-curl -s "$(terraform output -raw mcp_endpoint)/mcp/tools"
+
+# MCP initialize
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}'
+
+# MCP initialized notification
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+
+# MCP tools/list
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "MCP-Protocol-Version: 2025-06-18" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
 ```
 
 > Code samples you can run against the endpoint:

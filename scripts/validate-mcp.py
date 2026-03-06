@@ -5,11 +5,10 @@ Post-deployment validation and testing
 """
 
 import argparse
-import json
 import logging
 import sys
 import time
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
@@ -31,6 +30,52 @@ class MCPValidator:
         self.deployment_type = deployment_type
         self.session = requests.Session()
         self.timeout = 30
+        self.protocol_version: Optional[str] = None
+
+        # Streamable HTTP requires Accept including application/json and text/event-stream.
+        self.session.headers.update({
+            "Content-Type": "application/json",
+            "Accept": "application/json, text/event-stream",
+        })
+
+    def _mcp_post(self, payload: Dict[str, Any]) -> requests.Response:
+        headers: Dict[str, str] = {}
+        if self.protocol_version:
+            headers["MCP-Protocol-Version"] = self.protocol_version
+        return self.session.post(
+            f"{self.endpoint}/mcp",
+            json=payload,
+            headers=headers,
+            timeout=self.timeout,
+        )
+
+    def _mcp_initialize(self) -> bool:
+        init: Dict[str, Any] = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {
+                "protocolVersion": "2025-06-18",
+                "capabilities": {},
+                "clientInfo": {"name": "mcp-validator", "version": "1.0.0"},
+            },
+        }
+        resp = self._mcp_post(init)
+        if resp.status_code != 200:
+            logger.error(f"MCP initialize failed: {resp.status_code} {resp.text}")
+            return False
+        payload = resp.json()
+        if "error" in payload:
+            logger.error(f"MCP initialize error: {payload['error']}")
+            return False
+        self.protocol_version = payload.get("result", {}).get("protocolVersion")
+        if not self.protocol_version:
+            logger.error("MCP initialize missing protocolVersion")
+            return False
+
+        initialized: Dict[str, Any] = {"jsonrpc": "2.0", "method": "notifications/initialized"}
+        self._mcp_post(initialized)
+        return True
     
     def validate(self) -> bool:
         """Run comprehensive validation"""
@@ -46,7 +91,7 @@ class MCPValidator:
             ("Error Handling", self._test_error_handling)
         ]
         
-        results = []
+        results: List[Tuple[str, bool, Optional[str]]] = []
         
         for step_name, test_func in validation_steps:
             logger.info(f"Running {step_name} validation...")
@@ -109,31 +154,22 @@ class MCPValidator:
             return False
     
     def _test_mcp_protocol(self) -> bool:
-        """Test MCP protocol endpoints"""
+        """Test MCP Streamable HTTP endpoint"""
         try:
-            # Test tools endpoint
-            response = self.session.get(f"{self.endpoint}/mcp/tools", timeout=self.timeout)
-            if response.status_code != 200:
-                logger.error(f"Tools endpoint failed: {response.status_code}")
+            if not self._mcp_initialize():
                 return False
-            
-            tools_data = response.json()
-            if "tools" not in tools_data:
-                logger.error("Invalid tools response format")
-                return False
-            
-            # Test resources endpoint
-            response = self.session.get(f"{self.endpoint}/mcp/resources", timeout=self.timeout)
-            if response.status_code != 200:
-                logger.error(f"Resources endpoint failed: {response.status_code}")
-                return False
-            
-            # Test prompts endpoint
-            response = self.session.get(f"{self.endpoint}/mcp/prompts", timeout=self.timeout)
-            if response.status_code != 200:
-                logger.error(f"Prompts endpoint failed: {response.status_code}")
-                return False
-            
+
+            for method in ["tools/list", "resources/list", "prompts/list"]:
+                req: Dict[str, Any] = {"jsonrpc": "2.0", "id": 2, "method": method, "params": {}}
+                response = self._mcp_post(req)
+                if response.status_code != 200:
+                    logger.error(f"{method} failed: {response.status_code}")
+                    return False
+                payload = response.json()
+                if "error" in payload:
+                    logger.error(f"{method} error: {payload['error']}")
+                    return False
+
             return True
         
         except Exception as e:
@@ -143,12 +179,17 @@ class MCPValidator:
     def _test_tool_availability(self) -> bool:
         """Test that enabled tools are available"""
         try:
-            response = self.session.get(f"{self.endpoint}/mcp/tools", timeout=self.timeout)
+            req: Dict[str, Any] = {"jsonrpc": "2.0", "id": 3, "method": "tools/list", "params": {}}
+            response = self._mcp_post(req)
             if response.status_code != 200:
                 return False
-            
-            tools_data = response.json()
-            available_tools = [tool["name"] for tool in tools_data["tools"]]
+
+            payload = response.json()
+            if "error" in payload:
+                logger.error(f"tools/list error: {payload['error']}")
+                return False
+
+            available_tools = [tool["name"] for tool in payload.get("result", {}).get("tools", [])]
             
             # Check for required tools based on enabled services
             expected_tools = ["health_check"]  # Always available
@@ -175,31 +216,28 @@ class MCPValidator:
     def _test_tool_execution(self) -> bool:
         """Test tool execution"""
         try:
-            # Test health check tool
-            tool_call = {
-                "name": "health_check",
-                "arguments": {}
+            tool_call: Dict[str, Any] = {
+                "jsonrpc": "2.0",
+                "id": 4,
+                "method": "tools/call",
+                "params": {"name": "health_check", "arguments": {}},
             }
-            
-            response = self.session.post(
-                f"{self.endpoint}/mcp/execute",
-                json=tool_call,
-                headers={"Content-Type": "application/json"},
-                timeout=self.timeout,
-            )
-            
+            response = self._mcp_post(tool_call)
             if response.status_code != 200:
                 logger.error(f"Tool execution failed: {response.status_code}")
                 return False
-            
-            result = response.json()
-            if result.get("isError", False):
-                logger.error(f"Tool execution returned error: {result.get('errorMessage')}")
+
+            payload = response.json()
+            if "error" in payload:
+                logger.error(f"Tool execution error: {payload['error']}")
                 return False
-            
-            # Verify response has content
+            result = payload.get("result", {})
+            if result.get("isError", False):
+                logger.error("Tool execution returned isError")
+                return False
+
             if "content" not in result:
-                logger.error("Tool execution response missing content")
+                logger.error("Tool execution result missing content")
                 return False
             
             logger.info("Tool execution test successful")
@@ -212,15 +250,24 @@ class MCPValidator:
     def _test_resource_access(self) -> bool:
         """Test resource access"""
         try:
-            # Test server status resource
-            response = self.session.get(f"{self.endpoint}/mcp/resources/mcp/server/status", timeout=self.timeout)
+            req: Dict[str, Any] = {
+                "jsonrpc": "2.0",
+                "id": 5,
+                "method": "resources/read",
+                "params": {"uri": "azure://mcp/server/status"},
+            }
+            response = self._mcp_post(req)
             if response.status_code != 200:
-                logger.error(f"Resource access failed: {response.status_code}")
+                logger.error(f"Resource read failed: {response.status_code}")
                 return False
-            
-            resource_data = response.json()
-            if not isinstance(resource_data, dict):
-                logger.error("Invalid resource response format")
+
+            payload = response.json()
+            if "error" in payload:
+                logger.error(f"Resource read error: {payload['error']}")
+                return False
+            contents = payload.get("result", {}).get("contents")
+            if not isinstance(contents, list) or not contents:
+                logger.error("Invalid resources/read response format")
                 return False
             
             logger.info("Resource access test successful")
@@ -233,30 +280,21 @@ class MCPValidator:
     def _test_error_handling(self) -> bool:
         """Test error handling"""
         try:
-            # Test invalid tool execution
-            invalid_tool_call = {
-                "name": "invalid_tool",
-                "arguments": {}
+            invalid_tool_call: Dict[str, Any] = {
+                "jsonrpc": "2.0",
+                "id": 6,
+                "method": "tools/call",
+                "params": {"name": "invalid_tool", "arguments": {}},
             }
-            
-            response = self.session.post(
-                f"{self.endpoint}/mcp/execute",
-                json=invalid_tool_call,
-                headers={"Content-Type": "application/json"},
-                timeout=self.timeout,
-            )
-            
+
+            response = self._mcp_post(invalid_tool_call)
             if response.status_code != 200:
                 logger.error(f"Error handling test failed: {response.status_code}")
                 return False
-            
-            result = response.json()
-            if not result.get("isError", False):
-                logger.error("Expected error response for invalid tool")
-                return False
-            
-            if not result.get("errorMessage"):
-                logger.error("Error response missing error message")
+
+            payload = response.json()
+            if "error" not in payload:
+                logger.error("Expected JSON-RPC error for invalid tool")
                 return False
             
             logger.info("Error handling test successful")
@@ -266,7 +304,7 @@ class MCPValidator:
             logger.error(f"Error handling test failed: {e}")
             return False
     
-    def _print_validation_summary(self, results: List[tuple]):
+    def _print_validation_summary(self, results: List[Tuple[str, bool, Optional[str]]]):
         """Print validation summary"""
         logger.info("\n" + "="*50)
         logger.info("VALIDATION SUMMARY")
