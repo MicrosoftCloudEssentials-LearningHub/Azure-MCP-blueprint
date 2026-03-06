@@ -54,11 +54,11 @@ class MCPValidator:
                 result = test_func()
                 results.append((step_name, result, None))
                 if result:
-                    logger.info(f"✅ {step_name}: PASSED")
+                    logger.info(f"[PASS] {step_name}")
                 else:
-                    logger.error(f"❌ {step_name}: FAILED")
+                    logger.error(f"[FAIL] {step_name}")
             except Exception as e:
-                logger.error(f"❌ {step_name}: ERROR - {e}")
+                logger.error(f"[ERROR] {step_name}: {e}")
                 results.append((step_name, False, str(e)))
         
         # Print summary
@@ -276,7 +276,7 @@ class MCPValidator:
         total = len(results)
         
         for step_name, result, error in results:
-            status = "✅ PASSED" if result else "❌ FAILED"
+            status = "PASSED" if result else "FAILED"
             logger.info(f"{step_name:<20} {status}")
             if error:
                 logger.info(f"  Error: {error}")

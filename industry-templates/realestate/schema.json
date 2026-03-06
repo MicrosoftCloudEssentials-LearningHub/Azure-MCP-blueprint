@@ -54,5 +54,10 @@
       {"name": "features", "type": "Collection(Edm.String)", "searchable": true, "filterable": true}
     ]
   },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "openai_chat_completion",
+    "search_documents"
+  ],
   "sample_data_size": 100000
 }

@@ -5,7 +5,7 @@ Costa Rica
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2025-12-03
+Last updated: 2026-03-06
 
 ----------
 
@@ -19,7 +19,8 @@ Last updated: 2025-12-03
 
 ## Available Templates
 
-### Healthcare
+<details>
+<summary><strong>Healthcare</strong></summary>
 
 - **File**: `healthcare/`
 - **Use Case**: Medical records management, patient care coordination, clinical research
@@ -28,21 +29,25 @@ Last updated: 2025-12-03
 - **Search Index**: `healthcare-index`
 
 **Data Schema**:
-- Patient demographics (name, DOB, gender, blood type)
+
+- Patient demographics (name, DOB (date of birth), gender, blood type)
 - Medical history and chronic conditions
 - Medications and allergies
 - Insurance and emergency contacts
 - Lab results and vaccinations
 
 **Example Queries**:
+
 - Find patients with specific conditions (diabetes, hypertension)
 - Search by blood type for emergency scenarios
 - Query patients by physician or insurance provider
 - Semantic search for medical conditions
 - AI-assisted medical summaries
 
+</details>
 
-### Retail & E-Commerce
+<details>
+<summary><strong>Retail & E-Commerce</strong></summary>
 
 - **File**: `retail/`
 - **Use Case**: Transaction analytics, customer insights, inventory management
@@ -51,6 +56,7 @@ Last updated: 2025-12-03
 - **Search Index**: `retail-index`
 
 **Data Schema**:
+
 - Transaction details (ID, date, amount, status)
 - Customer information and loyalty points
 - Product items with categories and SKUs
@@ -58,14 +64,17 @@ Last updated: 2025-12-03
 - Payment method and promotion codes
 
 **Example Queries**:
+
 - High-value transaction analysis (>$500)
 - Product category performance tracking
 - Customer purchase history retrieval
 - Seasonal/promotional campaign effectiveness
 - Loyalty program member identification
 
+</details>
 
-### Financial Services
+<details>
+<summary><strong>Financial Services</strong></summary>
 
 - **File**: `finance/`
 - **Use Case**: Transaction monitoring, fraud detection, account management
@@ -73,8 +82,8 @@ Last updated: 2025-12-03
 - **Cosmos DB Container**: `transactions`  
 - **Search Index**: `finance-index`
 
-
 **Data Schema**:
+
 - Transaction details (type, amount, timestamp)
 - Account and customer information
 - Merchant name and category
@@ -82,11 +91,14 @@ Last updated: 2025-12-03
 - Fraud score and risk indicators
 
 **Example Queries**:
+
 - Fraud detection (high fraud scores)
 - AML compliance (large withdrawals >$10K)
 - International transaction monitoring
 - Spending pattern analysis by category
 - AI-powered financial advice generation
+
+</details>
 
 <!-- START BADGE -->
 <div align="center">

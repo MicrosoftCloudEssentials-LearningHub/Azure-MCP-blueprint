@@ -59,7 +59,7 @@ async def run_interactive(orchestrator):
             result = await orchestrator.process(query)
             print(result)
         except Exception as e:
-            print(f"❌ Error: {str(e)}")
+            print(f"[ERROR] {str(e)}")
         
         print("-" * 80)
         print()
@@ -80,14 +80,14 @@ async def run_demo(orchestrator):
     print()
     
     for i, query in enumerate(demo_queries, 1):
-        print(f"📝 Query {i}: {query}")
+        print(f"Query {i}: {query}")
         print()
         
         try:
             result = await orchestrator.process(query)
             print(result)
         except Exception as e:
-            print(f"❌ Error: {str(e)}")
+            print(f"[ERROR] {str(e)}")
         
         print()
         print("=" * 80)

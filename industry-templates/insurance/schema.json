@@ -50,5 +50,11 @@
       "content": ["description", "resolution"]
     }
   },
+  "mcp_tools": [
+    "cosmos_query_items",
+    "openai_chat_completion",
+    "search_documents",
+    "search_semantic"
+  ],
   "sample_data_size": 100000
 }

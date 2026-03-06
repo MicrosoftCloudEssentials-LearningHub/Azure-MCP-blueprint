@@ -88,7 +88,8 @@ jobs:
             schema = json.load(f)
             assert 'cosmos_db' in schema
             assert 'search_index' in schema
-            assert 'mcp_tools' in schema
+            assert 'mcp_tools' in schema, f'Missing mcp_tools for {industry}'
+            assert isinstance(schema.get('mcp_tools'), list), f'mcp_tools must be a list for {industry}'
 
             # Accept either size field style; defaulting is handled by scripts.
             has_size = isinstance(schema.get('sample_data_size'), int)
@@ -96,8 +97,23 @@ jobs:
             assert has_size or has_cfg, f'Missing sample size config for {industry}'
 
           with queries_path.open('r', encoding='utf-8') as f:
-            queries = json.load(f)
+            queries_data = json.load(f)
+            if isinstance(queries_data, list):
+              queries = queries_data
+            elif isinstance(queries_data, dict) and isinstance(queries_data.get('example_queries'), list):
+              queries = queries_data['example_queries']
+            else:
+              raise AssertionError(
+                f'{industry} queries.json must be either a list of queries or an object with an example_queries list'
+              )
+
             assert len(queries) == 10, f'{industry} queries.json must contain exactly 10 queries'
+
+            # Ensure schema mcp_tools covers all tools referenced by example queries.
+            referenced_tools = sorted({q.get('tool') for q in queries if isinstance(q, dict) and isinstance(q.get('tool'), str) and q.get('tool')})
+            declared_tools = sorted({t for t in (schema.get('mcp_tools') or []) if isinstance(t, str) and t})
+            missing_tools = sorted(set(referenced_tools) - set(declared_tools))
+            assert not missing_tools, f'{industry} schema mcp_tools missing: {missing_tools}'
 
           print(f'✓ {industry} template valid (10 queries)')
 

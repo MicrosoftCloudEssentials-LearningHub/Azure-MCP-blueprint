@@ -1,6 +1,14 @@
 # Healthcare Multi-Agent System
 
-Production-ready multi-agent AI system for healthcare data management with MCP integration.
+Costa Rica
+
+[![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
+[brown9804](https://github.com/brown9804)
+
+Last updated: 2026-03-06
+
+----------
+> Production-ready multi-agent AI system for healthcare data management with MCP integration.
 
 ## Architecture
 
@@ -27,7 +35,6 @@ Triage Agent (gpt-4o-mini) - Intent classification
 ```
 
 ## Features
-
 
 - Multi-agent orchestration with intelligent routing
 - Model router (gpt-4o-mini vs gpt-4o optimization)
@@ -73,7 +80,8 @@ PROJECT_NAME=your-project
 
 ## Usage Examples
 
-### Example 1: Patient Search
+<details>
+<summary><strong>Example 1: Patient Search</strong></summary>
 
 ```python
 from orchestrator import HealthcareOrchestrator
@@ -88,6 +96,7 @@ print(result)
 ```
 
 **Output:**
+
 ```
 Routing Plan: 
   Primary Intent: clinical_research
@@ -118,7 +127,10 @@ Final Result:
   [Full patient list and recommendations attached]
 ```
 
-### Example 2: Medication Safety Check
+</details>
+
+<details>
+<summary><strong>Example 2: Medication Safety Check</strong></summary>
 
 ```python
 result = await orchestrator.process(
@@ -126,7 +138,10 @@ result = await orchestrator.process(
 )
 ```
 
-### Example 3: Population Health Analysis
+</details>
+
+<details>
+<summary><strong>Example 3: Population Health Analysis</strong></summary>
 
 ```python
 result = await orchestrator.process(
@@ -134,9 +149,12 @@ result = await orchestrator.process(
 )
 ```
 
+</details>
+
 ## Agent Definitions
 
-### 1. Triage Agent
+<details>
+<summary><strong>1. Triage Agent</strong></summary>
 
 **Model**: gpt-4o-mini  
 **Role**: Route requests to appropriate specialists  
@@ -154,7 +172,10 @@ TriageAgent(
 )
 ```
 
-### 2. Clinical Data Agent
+</details>
+
+<details>
+<summary><strong>2. Clinical Data Agent</strong></summary>
 
 **Model**: gpt-4o-mini  
 **Role**: Query patient records from Cosmos DB and AI Search  
@@ -174,7 +195,10 @@ ClinicalDataAgent(
 )
 ```
 
-### 3. Diagnostic Agent
+</details>
+
+<details>
+<summary><strong>3. Diagnostic Agent</strong></summary>
 
 **Model**: gpt-4o (requires advanced reasoning)  
 **Role**: Generate medical insights and recommendations  
@@ -196,7 +220,10 @@ DiagnosticAgent(
 )
 ```
 
-### 4. Compliance Agent
+</details>
+
+<details>
+<summary><strong>4. Compliance Agent</strong></summary>
 
 **Model**: gpt-4o-mini  
 **Role**: Verify HIPAA compliance and data access permissions  
@@ -215,7 +242,10 @@ ComplianceAgent(
 )
 ```
 
-### 5. Care Coordinator
+</details>
+
+<details>
+<summary><strong>5. Care Coordinator</strong></summary>
 
 **Model**: gpt-4o  
 **Role**: Aggregate multi-agent results into actionable summary  
@@ -234,6 +264,8 @@ CareCoordinatorAgent(
     tools=["openai_chat_completion"]
 )
 ```
+
+</details>
 
 ## Model Router Logic
 
@@ -308,13 +340,17 @@ except ComplianceViolation as e:
 
 ## Deployment
 
-### Local Development
+<details>
+<summary><strong>Local Development</strong></summary>
 
 ```bash
 python main.py --interactive
 ```
 
-### Azure Container Apps
+</details>
+
+<details>
+<summary><strong>Azure Container Apps</strong></summary>
 
 ```bash
 # Build and push
@@ -329,7 +365,10 @@ az containerapp create \
     --environment your-env
 ```
 
-### Azure AI Foundry
+</details>
+
+<details>
+<summary><strong>Azure AI Foundry</strong></summary>
 
 ```python
 # Deploy as Foundry agent
@@ -341,8 +380,17 @@ ai_client.agents.create_agent(
 )
 ```
 
+</details>
+
 ## Next Steps
 
 - [Retail Shopping Assistant](../retail-shopping-assistant/)
 - [Financial Advisor](../financial-advisor/)
 - [Integration Guides](../../docs/integration-guides/)
+
+<!-- START BADGE -->
+<div align="center">
+  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
+  <p>Refresh Date: 2025-11-03</p>
+</div>
+<!-- END BADGE -->

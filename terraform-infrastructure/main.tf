@@ -20,11 +20,11 @@ locals {
 
   # Load the selected industry schema to keep infra + server configuration consistent.
   # Terraform can read local files, so we treat the template JSON as the source of truth.
-  industry_schema            = jsondecode(file("${path.module}/../industry-templates/${var.selected_industry}/schema.json"))
-  cosmos_database_name        = try(local.industry_schema.cosmos_db.database, "mcp-database")
-  cosmos_container_name       = try(local.industry_schema.cosmos_db.container, "mcp-container")
-  cosmos_partition_key_path   = try(local.industry_schema.cosmos_db.partition_key, "/id")
-  search_index_name           = try(local.industry_schema.search_index.name, "mcp-index")
+  industry_schema           = jsondecode(file("${path.module}/../industry-templates/${var.selected_industry}/schema.json"))
+  cosmos_database_name      = try(local.industry_schema.cosmos_db.database, "mcp-database")
+  cosmos_container_name     = try(local.industry_schema.cosmos_db.container, "mcp-container")
+  cosmos_partition_key_path = try(local.industry_schema.cosmos_db.partition_key, "/id")
+  search_index_name         = try(local.industry_schema.search_index.name, "mcp-index")
 
   # MCP configuration
   mcp_port = var.mcp_deployment_type == "function" ? 80 : 8000
@@ -37,9 +37,9 @@ locals {
   }
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CORE AZURE INFRASTRUCTURE
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Resource Group
 resource "azurerm_resource_group" "main" {
@@ -132,9 +132,9 @@ resource "azurerm_key_vault_access_policy" "managed_identity" {
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CONTAINER REGISTRY FOR AUTOMATED BUILDS
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Azure Container Registry
 resource "azurerm_container_registry" "main" {
@@ -220,7 +220,7 @@ resource "null_resource" "build_mcp_image" {
       & az acr build `
         --only-show-errors `
         --registry "${azurerm_container_registry.main[0].name}" `
-        --image "mcp-server:latest" `
+        --image "mcp-server:${var.mcp_image_tag}" `
         --file ../src/mcp-server/Dockerfile `
         --no-logs `
         ../src/mcp-server 1> $stdoutPath 2> $stderrPath
@@ -268,9 +268,9 @@ resource "azurerm_storage_container" "sample_documents" {
   container_access_type = "private"
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # AI SERVICES INFRASTRUCTURE
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Microsoft Foundry (formerly Azure OpenAI)
 resource "azurerm_cognitive_account" "foundry" {
@@ -350,9 +350,9 @@ resource "time_sleep" "foundry_service_ready" {
   create_duration = "60s" # Wait 1 minute for Foundry service to be ready
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # KEY VAULT SECRETS
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Cosmos DB connection string
 resource "azurerm_key_vault_secret" "cosmos_connection_string" {
@@ -496,9 +496,9 @@ resource "azurerm_cosmosdb_sql_container" "main" {
   depends_on = [azurerm_cosmosdb_sql_database.main]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CONTAINER APPS DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Container Apps Environment
 resource "azurerm_container_app_environment" "main" {
@@ -532,7 +532,7 @@ resource "azurerm_container_app" "mcp_server" {
 
     container {
       name   = "mcp-server"
-      image  = var.enable_container_registry ? "${azurerm_container_registry.main[0].login_server}/mcp-server:latest" : "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
+      image  = var.enable_container_registry ? "${azurerm_container_registry.main[0].login_server}/mcp-server:${var.mcp_image_tag}" : "mcr.microsoft.com/azuredocs/containerapps-helloworld:latest"
       cpu    = var.container_cpu
       memory = var.container_memory
 
@@ -728,9 +728,42 @@ resource "azurerm_container_app" "mcp_server" {
   tags = local.common_tags
 }
 
-# =============================================================================
+# After an ACR build, force a Container App update so it pulls the newest image
+# even when the tag remains constant (e.g., `latest`).
+resource "null_resource" "refresh_container_app_image" {
+  count = var.enable_automated_deployment && var.mcp_deployment_type == "container-app" && var.enable_container_registry ? 1 : 0
+
+  provisioner "local-exec" {
+    command     = <<-EOT
+      $ErrorActionPreference = 'Stop'
+      $ProgressPreference = 'SilentlyContinue'
+      $env:AZURE_CORE_NO_COLOR = "1"
+
+      Write-Host "Refreshing Container App to pull latest MCP image..." -ForegroundColor Yellow
+
+      & az containerapp update `
+        --only-show-errors `
+        --resource-group "${azurerm_resource_group.main.name}" `
+        --name "${azurerm_container_app.mcp_server[0].name}" `
+        --image "${azurerm_container_registry.main[0].login_server}/mcp-server:${var.mcp_image_tag}" | Out-Null
+    EOT
+    interpreter = ["PowerShell", "-Command"]
+    working_dir = path.module
+  }
+
+  depends_on = [
+    null_resource.build_mcp_image,
+    azurerm_container_app.mcp_server,
+  ]
+
+  triggers = {
+    always_run = timestamp()
+  }
+}
+
+# -----------------------------------------------------------------------------
 # AZURE FUNCTIONS DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Storage Account for Functions
 resource "azurerm_storage_account" "functions" {
@@ -801,9 +834,9 @@ resource "azurerm_linux_function_app" "mcp_server" {
   tags = local.common_tags
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # APP SERVICE DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # App Service Plan
 resource "azurerm_service_plan" "app_service" {
@@ -858,9 +891,9 @@ resource "azurerm_linux_web_app" "mcp_server" {
   tags = local.common_tags
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # ROLE ASSIGNMENTS FOR MANAGED IDENTITY
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Get the managed identity object ID based on deployment type
 locals {
@@ -870,19 +903,26 @@ locals {
   search_role_needed  = contains(var.enable_mcp_tools, "search") ? { "search" = "search" } : {}
 }
 
-# Cosmos DB role assignment
-resource "azurerm_role_assignment" "cosmos_data_contributor" {
-  for_each             = local.cosmos_role_needed
-  scope                = azurerm_cosmosdb_account.main[0].id
-  role_definition_name = "DocumentDB Account Contributor"
+# Cosmos DB SQL RBAC role assignment (data-plane)
+resource "azurerm_cosmosdb_sql_role_assignment" "cosmos_data_contributor" {
+  for_each            = local.cosmos_role_needed
+  resource_group_name = azurerm_resource_group.main.name
+  account_name        = azurerm_cosmosdb_account.main[0].name
+
+  # Built-in SQL RBAC role definition for "Cosmos DB Built-in Data Contributor"
+  role_definition_id = "${azurerm_cosmosdb_account.main[0].id}/sqlRoleDefinitions/00000000-0000-0000-0000-000000000002"
+  scope              = azurerm_cosmosdb_account.main[0].id
+
   principal_id = (
-    var.mcp_deployment_type == "container-app" ? azurerm_container_app.mcp_server[0].identity[0].principal_id :
+    # The Container App sets AZURE_CLIENT_ID, so DefaultAzureCredential uses this user-assigned identity.
+    var.mcp_deployment_type == "container-app" ? azurerm_user_assigned_identity.container_app[0].principal_id :
     var.mcp_deployment_type == "function" ? azurerm_linux_function_app.mcp_server[0].identity[0].principal_id :
     azurerm_linux_web_app.mcp_server[0].identity[0].principal_id
   )
 
   depends_on = [
     azurerm_container_app.mcp_server,
+    azurerm_user_assigned_identity.container_app,
     azurerm_linux_function_app.mcp_server,
     azurerm_linux_web_app.mcp_server,
     time_sleep.cosmos_account_ready
@@ -895,13 +935,14 @@ resource "azurerm_role_assignment" "foundry_user" {
   scope                = azurerm_cognitive_account.foundry[0].id
   role_definition_name = "Cognitive Services OpenAI User"
   principal_id = (
-    var.mcp_deployment_type == "container-app" ? azurerm_container_app.mcp_server[0].identity[0].principal_id :
+    var.mcp_deployment_type == "container-app" ? azurerm_user_assigned_identity.container_app[0].principal_id :
     var.mcp_deployment_type == "function" ? azurerm_linux_function_app.mcp_server[0].identity[0].principal_id :
     azurerm_linux_web_app.mcp_server[0].identity[0].principal_id
   )
 
   depends_on = [
     azurerm_container_app.mcp_server,
+    azurerm_user_assigned_identity.container_app,
     azurerm_linux_function_app.mcp_server,
     azurerm_linux_web_app.mcp_server,
     time_sleep.foundry_service_ready
@@ -914,13 +955,17 @@ resource "azurerm_role_assignment" "key_vault_secrets_user" {
   scope                = azurerm_key_vault.main.id
   role_definition_name = "Key Vault Secrets User"
   principal_id = (
-    var.mcp_deployment_type == "container-app" ? azurerm_container_app.mcp_server[0].identity[0].principal_id :
+    # Container Apps Key Vault secret references use the identity specified on each secret block.
+    # In this blueprint we use a *user-assigned identity* for Container Apps to avoid provisioning
+    # ordering issues, so grant the Key Vault secrets role to that identity.
+    var.mcp_deployment_type == "container-app" ? azurerm_user_assigned_identity.container_app[0].principal_id :
     var.mcp_deployment_type == "function" ? azurerm_linux_function_app.mcp_server[0].identity[0].principal_id :
     azurerm_linux_web_app.mcp_server[0].identity[0].principal_id
   )
 
   depends_on = [
     azurerm_container_app.mcp_server,
+    azurerm_user_assigned_identity.container_app,
     azurerm_linux_function_app.mcp_server,
     azurerm_linux_web_app.mcp_server
   ]
@@ -928,34 +973,36 @@ resource "azurerm_role_assignment" "key_vault_secrets_user" {
 
 # Search role assignment
 resource "azurerm_role_assignment" "search_contributor" {
-  for_each             = local.search_role_needed
-  scope                = azurerm_search_service.main[0].id
-  role_definition_name = "Search Service Contributor"
+  for_each = local.search_role_needed
+  scope    = azurerm_search_service.main[0].id
+  # Data-plane role for Entra ID auth to query indexes if API keys are not used.
+  role_definition_name = "Search Index Data Contributor"
   principal_id = (
-    var.mcp_deployment_type == "container-app" ? azurerm_container_app.mcp_server[0].identity[0].principal_id :
+    var.mcp_deployment_type == "container-app" ? azurerm_user_assigned_identity.container_app[0].principal_id :
     var.mcp_deployment_type == "function" ? azurerm_linux_function_app.mcp_server[0].identity[0].principal_id :
     azurerm_linux_web_app.mcp_server[0].identity[0].principal_id
   )
 
   depends_on = [
     azurerm_container_app.mcp_server,
+    azurerm_user_assigned_identity.container_app,
     azurerm_linux_function_app.mcp_server,
     azurerm_linux_web_app.mcp_server
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # MCP SERVER DEPLOYMENT AUTOMATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Build and deploy MCP server
-# =============================================================================
+# -----------------------------------------------------------------------------
 # POST-DEPLOYMENT VALIDATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Validate MCP server deployment
 resource "null_resource" "validate_deployment" {
-  count = var.enable_validation && var.mcp_deployment_type == "container-app" ? 1 : 0
+  count = var.enable_validation && var.mcp_deployment_type != "local" ? 1 : 0
 
   provisioner "local-exec" {
     command     = <<-EOT
@@ -1008,7 +1055,12 @@ resource "null_resource" "validate_deployment" {
     working_dir = path.module
   }
 
-  depends_on = [azurerm_container_app.mcp_server]
+  depends_on = [
+    azurerm_container_app.mcp_server,
+    null_resource.refresh_container_app_image,
+    azurerm_linux_function_app.mcp_server,
+    azurerm_linux_web_app.mcp_server
+  ]
 }
 
 # MCP endpoint based on deployment type
@@ -1021,9 +1073,9 @@ locals {
   )
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # SAMPLE DATA DEPLOYMENT AUTOMATION
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # Deploy sample data for enterprise demonstration
 resource "null_resource" "deploy_sample_data" {
@@ -1075,8 +1127,8 @@ resource "null_resource" "deploy_sample_data" {
   ]
 }
 
-# =============================================================================
+# -----------------------------------------------------------------------------
 # CLI INTEGRATION - AUTO-TRIGGER AFTER DEPLOYMENT
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 # CLI integration removed: Terraform apply should finish without launching interactive tooling.
