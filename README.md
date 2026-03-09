@@ -113,37 +113,43 @@ Terraform provisions:
 <details>
 <summary><b> Verify Deployment </b> (Click to expand)</summary>
 
-> After `terraform apply`, use the `mcp_endpoint` output:
+> After `terraform apply`, use the `mcp_endpoint` output. For example:
 
 ```bash
 cd terraform-infrastructure
 terraform output mcp_endpoint
 ```
 
+<img width="1911" height="907" alt="image" src="https://github.com/user-attachments/assets/872c8647-4fc9-4d95-8393-76e3f371eea7" />
+
 > Then test:
 
 ```bash
 curl -s "$(terraform output -raw mcp_endpoint)/health"
-
-# MCP initialize
-curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}'
-
-# MCP initialized notification
-curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-
-# MCP tools/list
-curl -s "$(terraform output -raw mcp_endpoint)/mcp" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -H "MCP-Protocol-Version: 2025-06-18" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
 ```
+
+<img width="1362" height="185" alt="image" src="https://github.com/user-attachments/assets/24107fcd-67c5-44d7-8767-72a46ff55805" />
+
+```bash
+# MCP initialize
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}'
+```
+
+<img width="1569" height="272" alt="image" src="https://github.com/user-attachments/assets/3f3f02d6-44bd-4a77-8d36-c068929ea129" />
+
+```bash
+# MCP initialized notification
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+```
+
+<img width="1565" height="146" alt="image" src="https://github.com/user-attachments/assets/aeacf4ce-0978-415d-a1f3-e7dbc64b9d77" />
+
+```bash
+# MCP tools/list
+curl -s "$(terraform output -raw mcp_endpoint)/mcp" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" -H "MCP-Protocol-Version: 2025-06-18" -d '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+```
+
+<img width="1924" height="1136" alt="image" src="https://github.com/user-attachments/assets/58dc1448-ff18-4d07-a01c-9205773b2c91" />
 
 > Code samples you can run against the endpoint:
 
@@ -165,7 +171,7 @@ Each template includes:
 <details>
 <summary><b>Healthcare</b> (Click to expand)</summary>
 
-E.g. Medical records management, patient data search, clinical research
+> E.g. Medical records management, patient data search, clinical research
 
 **Sample Queries**:
 
@@ -194,7 +200,7 @@ E.g. Medical records management, patient data search, clinical research
 <details>
 <summary><b>Retail & E-Commerce</b> (Click to expand)</summary>
 
-Product catalog management, transaction analytics, customer insights
+> Product catalog management, transaction analytics, customer insights
 
 **Sample Queries**:
 
@@ -223,7 +229,7 @@ Product catalog management, transaction analytics, customer insights
 <details>
 <summary><b>Financial Services</b> (Click to expand)</summary>
 
-Transaction monitoring, fraud detection, customer account management
+> Transaction monitoring, fraud detection, customer account management
 
 **Sample Queries**:
 
@@ -253,7 +259,7 @@ Transaction monitoring, fraud detection, customer account management
 <details>
 <summary><b>Manufacturing & IoT</b> (Click to expand)</summary>
 
-Equipment monitoring, predictive maintenance, production optimization
+> Equipment monitoring, predictive maintenance, production optimization
 
 **Sample Queries**:
 
@@ -284,7 +290,7 @@ Equipment monitoring, predictive maintenance, production optimization
 <details>
 <summary><b>Education & Learning</b> (Click to expand)</summary>
 
-Student records, academic analytics, enrollment management
+> Student records, academic analytics, enrollment management
 
 **Sample Queries**:
 
@@ -315,7 +321,7 @@ Student records, academic analytics, enrollment management
 <details>
 <summary><b>Logistics & Supply Chain</b> (Click to expand)</summary>
 
-Shipment tracking, inventory management, delivery optimization
+> Shipment tracking, inventory management, delivery optimization
 
 **Sample Queries**:
 
@@ -347,7 +353,7 @@ Shipment tracking, inventory management, delivery optimization
 <details>
 <summary><b>Insurance & Claims</b> (Click to expand)</summary>
 
-Claims processing, fraud detection, policy management
+> Claims processing, fraud detection, policy management
 
 **Sample Queries**:
 
@@ -379,7 +385,7 @@ Claims processing, fraud detection, policy management
 <details>
 <summary><b>Hospitality & Tourism</b> (Click to expand)</summary>
 
-Hotel reservations, guest management, service optimization
+> Hotel reservations, guest management, service optimization
 
 **Sample Queries**:
 
@@ -412,7 +418,7 @@ Hotel reservations, guest management, service optimization
 <details>
 <summary><b>Energy & Utilities</b> (Click to expand)</summary>
 
-Smart grid monitoring, energy consumption analytics, utility management
+> Smart grid monitoring, energy consumption analytics, utility management
 
 **Sample Queries**:
 
@@ -445,7 +451,7 @@ Smart grid monitoring, energy consumption analytics, utility management
 <details>
 <summary><b>Real Estate & Property</b> (Click to expand)</summary>
 
-Property listings, sales tracking, portfolio management
+> Property listings, sales tracking, portfolio management
 
 **Sample Queries**:
 
