@@ -1,34 +1,27 @@
-# Custom Application Integration with MCP Server
+# Custom Application Integration <br/> with MCP Server - Overview
 
 Costa Rica
 
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-06
+Last updated: 2026-03-09
 
 ----------
-> This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK.
+> This guide shows developers how to integrate the Azure MCP Server into custom applications using the MCP SDK. Perfect for building AI-powered applications with direct MCP tool access.
 
 <details>
 <summary><strong>Table of contents</strong></summary>
 
-- [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Quick Start (Python)](#quick-start-python)
 - [Advanced Integration Examples](#advanced-integration-examples)
-- [Node.js/TypeScript Integration](#nodejstypescript-integration)
 - [Authentication Options](#authentication-options)
 - [Error Handling](#error-handling)
 - [Best Practices](#best-practices)
 - [Sample Applications](#sample-applications)
-- [Next Steps](#next-steps)
 
 </details>
-
-## Overview
-
-Perfect for building AI-powered applications with direct MCP tool access.
 
 ## Prerequisites
 
@@ -307,7 +300,8 @@ async def health():
 
 </details>
 
-## Node.js/TypeScript Integration
+<details>
+<summary><strong>Node.js/TypeScript Integration</strong></summary>
 
 ```typescript
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -365,6 +359,8 @@ async function main() {
 
 main();
 ```
+
+</details>
 
 ## Authentication Options
 
@@ -458,22 +454,16 @@ async def robust_tool_call(mcp: MCPClient, tool_name: str, args: dict, retries=3
 
 ## Sample Applications
 
-See [`/agent-samples`](../../agent-samples) directory for complete examples:
-
-- Healthcare Patient Assistant
-- Retail Product Recommendation Engine
-- Financial Transaction Monitor
-- Manufacturing Equipment Diagnostics
-
-## Next Steps
-
-- [Azure AI Foundry Integration](./azure-ai-foundry-integration.md)
-- [Copilot Studio Integration](./copilot-studio-integration.md)
-- [Pre-built Agent Samples](../../agent-samples/README.md)
+> See [`/agent-samples`](../../agent-samples) directory for complete examples:
+>
+> - Healthcare Patient Assistant
+> - Retail Product Recommendation Engine
+> - Financial Transaction Monitor
+> - Manufacturing Equipment Diagnostics
 
 <!-- START BADGE -->
 <div align="center">
-  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
-  <p>Refresh Date: 2025-11-03</p>
+  <img src="https://img.shields.io/badge/Total%20views-72-limegreen" alt="Total views">
+  <p>Refresh Date: 2026-03-09</p>
 </div>
 <!-- END BADGE -->

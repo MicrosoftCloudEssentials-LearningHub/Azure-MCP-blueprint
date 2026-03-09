@@ -176,6 +176,7 @@ result = await orchestrator.process(
 <summary><strong>1. Triage Agent</strong></summary>
 
 > Example:
+>
 > - **Model**: gpt-4o-mini
 > - **Role**: Route requests to appropriate specialists
 > - **Tools**: None (classification only)
@@ -198,6 +199,7 @@ TriageAgent(
 <summary><strong>2. Clinical Data Agent</strong></summary>
 
 > Example:
+>
 > - **Model**: gpt-4o-mini
 > - **Role**: Query patient records from Cosmos DB and AI Search
 > - **Tools**: `cosmos_query_items`, `search_documents`, `search_semantic`
@@ -222,6 +224,7 @@ ClinicalDataAgent(
 <summary><strong>3. Diagnostic Agent</strong></summary>
 
 > Example:
+>
 > - **Model**: gpt-4o (requires advanced reasoning)
 > - **Role**: Generate medical insights and recommendations
 > - **Tools**: `openai_chat_completion`
@@ -248,6 +251,7 @@ DiagnosticAgent(
 <summary><strong>4. Compliance Agent</strong></summary>
 
 > Example:
+>
 > - **Model**: gpt-4o-mini
 > - **Role**: Verify HIPAA compliance and data access permissions
 > - **Tools**: `cosmos_query_items`
@@ -271,6 +275,7 @@ ComplianceAgent(
 <summary><strong>5. Care Coordinator</strong></summary>
 
 > Example:
+>
 > - **Model**: gpt-4o
 > - **Role**: Aggregate multi-agent results into actionable summary
 > - **Tools**: `openai_chat_completion`
@@ -414,7 +419,7 @@ ai_client.agents.create_agent(
 
 <!-- START BADGE -->
 <div align="center">
-  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
-  <p>Refresh Date: 2025-11-03</p>
+  <img src="https://img.shields.io/badge/Total%20views-72-limegreen" alt="Total views">
+  <p>Refresh Date: 2026-03-09</p>
 </div>
 <!-- END BADGE -->

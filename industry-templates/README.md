@@ -22,11 +22,11 @@ Last updated: 2026-03-08
 </details>
 
 > Each folder under `industry-templates/<industry>/` defines:
+>
 > - **Cosmos DB** database/container names + partition key
 > - **Azure AI Search** index name + fields
 > - **Example queries** (tool + parameters)
 > - **Default sample record count** (typically 100,000)
-
 
 ## What’s in a template
 
@@ -90,7 +90,7 @@ Last updated: 2026-03-08
 
 <!-- START BADGE -->
 <div align="center">
-  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
-  <p>Refresh Date: 2025-11-03</p>
+  <img src="https://img.shields.io/badge/Total%20views-72-limegreen" alt="Total views">
+  <p>Refresh Date: 2026-03-09</p>
 </div>
 <!-- END BADGE -->

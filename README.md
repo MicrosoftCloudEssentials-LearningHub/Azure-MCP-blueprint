@@ -1,11 +1,11 @@
-# MCP (Model Context Protocol) <br/> Blueprint in Azure – Overview
+# MCP (Model Context Protocol) <br/> Blueprint in Azure – Overview 
 
 Costa Rica
 
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-06
+Last updated: 2026-03-09
 
 ----------
 
@@ -105,7 +105,7 @@ It defines:
 
 Terraform provisions:
 
-1. Provisions Azure resources (Key Vault, Cosmos DB, Azure AI Search, Azure OpenAI/"Foundry", monitoring)
+1. Provisions Azure resources (Key Vault, Cosmos DB, Azure AI Search, Microsoft Foundry (Azure AI Foundry), monitoring)
 2. Configures app settings and Key Vault-backed secrets for the selected hosting option
 3. **If** `mcp_deployment_type = "container-app"` and automation is enabled, builds the MCP server image **in Azure using ACR Tasks** and deploys it to Azure Container Apps
 4. Returns the MCP endpoint URL as a Terraform output
@@ -496,6 +496,7 @@ Each template includes:
 > Build AI-powered applications with direct MCP SDK integration.
 
 > [!TIP]
+>
 > - **Perfect for**: Custom web apps, mobile apps, enterprise systems
 > - **Guide**: [Custom App Integration](docs/integration-guides/custom-app-integration.md)
 
@@ -515,6 +516,7 @@ Each template includes:
 > Create sophisticated multi-agent systems with model routing.
 
 > [!TIP]
+>
 > - **Perfect for**: Complex AI workflows, multi-agent orchestration, advanced reasoning
 > - **Guide**: [Azure AI Foundry Integration](docs/integration-guides/azure-ai-foundry-integration.md)
 
@@ -534,6 +536,7 @@ Each template includes:
 > Low-code/no-code AI chatbots with enterprise data access.
 
 > [!TIP]
+>
 > - **Perfect for**: Teams deployment, customer service bots, internal tools
 > - **Guide**: [Copilot Studio Integration](docs/integration-guides/copilot-studio-integration.md)
 
@@ -575,12 +578,12 @@ Each template includes:
 | `cosmos_query_items`     | SQL-like queries                            | Cosmos DB Tools       |
 | `search_documents`       | Full-text search with filters               | Azure AI Search Tools |
 | `search_semantic`        | AI-powered semantic search                  | Azure AI Search Tools |
-| `openai_chat_completion` | GPT-4o interactions                        | Azure OpenAI Tools    |
-| `openai_embeddings`      | Text embeddings                             | Azure OpenAI Tools    |
+| `openai_chat_completion` | Chat completions (OpenAI-compatible)        | Foundry Tools         |
+| `openai_embeddings`      | Text embeddings (OpenAI-compatible)         | Foundry Tools         |
 
 <!-- START BADGE -->
 <div align="center">
-  <img src="https://img.shields.io/badge/Total%20views-1413-limegreen" alt="Total views">
-  <p>Refresh Date: 2025-11-03</p>
+  <img src="https://img.shields.io/badge/Total%20views-72-limegreen" alt="Total views">
+  <p>Refresh Date: 2026-03-09</p>
 </div>
 <!-- END BADGE -->
