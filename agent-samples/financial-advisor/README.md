@@ -5,7 +5,7 @@ Costa Rica
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-06
+Last updated: 2026-03-09
 
 ----------
 > Finance-focused sample agent that calls MCP tools over HTTP. It works best when Azure AI Search is enabled (uses `search_semantic` / `search_documents`). If Foundry (Azure AI Foundry model endpoint) is enabled on the MCP server, it will also use `openai_chat_completion` for routing/summaries.
