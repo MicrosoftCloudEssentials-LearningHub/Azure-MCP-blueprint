@@ -8,6 +8,7 @@ Costa Rica
 Last updated: 2026-03-06
 
 ----------
+
 > Minimal Python client for calling the MCP server endpoints exposed by this blueprint.
 
 <details>
