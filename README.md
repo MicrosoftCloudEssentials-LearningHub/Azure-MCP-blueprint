@@ -1,4 +1,4 @@
-# MCP (Model Context Protocol) <br/> Blueprint in Azure – Overview
+# MCP (Model Context Protocol) <br/> Blueprint in Azure – Overview 
 
 Costa Rica
 
