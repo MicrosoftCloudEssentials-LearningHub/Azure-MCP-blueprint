@@ -9,11 +9,7 @@ Last updated: 2026-03-08
 
 ----------
 
-> Industry templates are **the contract** that keeps Terraform, sample data, and the MCP server aligned. Each folder under `industry-templates/<industry>/` defines:
-> - **Cosmos DB** database/container names + partition key
-> - **Azure AI Search** index name + fields
-> - **Example queries** (tool + parameters)
-> - **Default sample record count** (typically 100,000)
+> Industry templates are **the contract** that keeps Terraform, sample data, and the MCP server aligned.
 
 <details>
 <summary><strong>Table of contents</strong></summary>
@@ -24,6 +20,13 @@ Last updated: 2026-03-08
 - [Synthetic data and PII-like fields](#synthetic-data-and-pii-like-fields)
 
 </details>
+
+> Each folder under `industry-templates/<industry>/` defines:
+> - **Cosmos DB** database/container names + partition key
+> - **Azure AI Search** index name + fields
+> - **Example queries** (tool + parameters)
+> - **Default sample record count** (typically 100,000)
+
 
 ## What’s in a template
 
