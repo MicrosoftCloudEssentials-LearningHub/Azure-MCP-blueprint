@@ -11,13 +11,6 @@ Last updated: 2026-03-06
 > Reference AI agent samples that use this repo's MCP Server over HTTP.
 
 <details>
-<summary><strong>Table of contents</strong></summary>
-
-This document doesn't use `##` section headings; use the expandable sections below to navigate.
-
-</details>
-
-<details>
 <summary><strong>List of References</strong></summary>
 
 - [Blueprint Overview](../README.md)
