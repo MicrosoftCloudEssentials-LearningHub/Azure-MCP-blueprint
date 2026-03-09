@@ -8,6 +8,7 @@ Costa Rica
 Last updated: 2026-03-06
 
 ----------
+
 > Production-ready multi-agent AI system for healthcare data management with MCP integration.
 
 <details>
@@ -174,9 +175,10 @@ result = await orchestrator.process(
 <details>
 <summary><strong>1. Triage Agent</strong></summary>
 
-**Model**: gpt-4o-mini  
-**Role**: Route requests to appropriate specialists  
-**Tools**: None (classification only)
+> Example:
+> - **Model**: gpt-4o-mini
+> - **Role**: Route requests to appropriate specialists
+> - **Tools**: None (classification only)
 
 ```python
 TriageAgent(
@@ -195,9 +197,10 @@ TriageAgent(
 <details>
 <summary><strong>2. Clinical Data Agent</strong></summary>
 
-**Model**: gpt-4o-mini  
-**Role**: Query patient records from Cosmos DB and AI Search  
-**Tools**: `cosmos_query_items`, `search_documents`, `search_semantic`
+> Example:
+> - **Model**: gpt-4o-mini
+> - **Role**: Query patient records from Cosmos DB and AI Search
+> - **Tools**: `cosmos_query_items`, `search_documents`, `search_semantic`
 
 ```python
 ClinicalDataAgent(
@@ -218,9 +221,10 @@ ClinicalDataAgent(
 <details>
 <summary><strong>3. Diagnostic Agent</strong></summary>
 
-**Model**: gpt-4o (requires advanced reasoning)  
-**Role**: Generate medical insights and recommendations  
-**Tools**: `openai_chat_completion`
+> Example:
+> - **Model**: gpt-4o (requires advanced reasoning)
+> - **Role**: Generate medical insights and recommendations
+> - **Tools**: `openai_chat_completion`
 
 ```python
 DiagnosticAgent(
@@ -243,9 +247,10 @@ DiagnosticAgent(
 <details>
 <summary><strong>4. Compliance Agent</strong></summary>
 
-**Model**: gpt-4o-mini  
-**Role**: Verify HIPAA compliance and data access permissions  
-**Tools**: `cosmos_query_items`
+> Example:
+> - **Model**: gpt-4o-mini
+> - **Role**: Verify HIPAA compliance and data access permissions
+> - **Tools**: `cosmos_query_items`
 
 ```python
 ComplianceAgent(
@@ -265,9 +270,10 @@ ComplianceAgent(
 <details>
 <summary><strong>5. Care Coordinator</strong></summary>
 
-**Model**: gpt-4o  
-**Role**: Aggregate multi-agent results into actionable summary  
-**Tools**: `openai_chat_completion`
+> Example:
+> - **Model**: gpt-4o
+> - **Role**: Aggregate multi-agent results into actionable summary
+> - **Tools**: `openai_chat_completion`
 
 ```python
 CareCoordinatorAgent(
@@ -314,7 +320,7 @@ def select_model(agent_role: str, task: str) -> str:
 
 ## Cost Analysis
 
-**Typical Query Cost Breakdown:**
+> **Typical Query Cost Breakdown:**
 
 | Agent | Model | Tokens | Cost |
 |-------|-------|--------|------|
