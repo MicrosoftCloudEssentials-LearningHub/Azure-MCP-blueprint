@@ -53,6 +53,8 @@ mcp_deployment_type = "container-app"  # Options: container-app, function, app-s
 
 > **MCP (Model Context Protocol)** is a **structured contract** between an AI client (like Copilot Studio or Azure AI Foundry) and an external service (your MCP server).
 
+<img width="750" alt="image" src="https://github.com/user-attachments/assets/c49b002d-e367-4ee6-b0cf-62c413259e33" />
+
 It defines:
 
 - **What tools exist** (functions the AI can call).  
