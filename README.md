@@ -105,7 +105,7 @@ It defines:
 
 Terraform provisions:
 
-1. Provisions Azure resources (Key Vault, Cosmos DB, Azure AI Search, Azure OpenAI/"Foundry", monitoring)
+1. Provisions Azure resources (Key Vault, Cosmos DB, Azure AI Search, Microsoft Foundry (Azure AI Foundry), monitoring)
 2. Configures app settings and Key Vault-backed secrets for the selected hosting option
 3. **If** `mcp_deployment_type = "container-app"` and automation is enabled, builds the MCP server image **in Azure using ACR Tasks** and deploys it to Azure Container Apps
 4. Returns the MCP endpoint URL as a Terraform output
@@ -575,8 +575,8 @@ Each template includes:
 | `cosmos_query_items`     | SQL-like queries                            | Cosmos DB Tools       |
 | `search_documents`       | Full-text search with filters               | Azure AI Search Tools |
 | `search_semantic`        | AI-powered semantic search                  | Azure AI Search Tools |
-| `openai_chat_completion` | GPT-4o interactions                        | Azure OpenAI Tools    |
-| `openai_embeddings`      | Text embeddings                             | Azure OpenAI Tools    |
+| `openai_chat_completion` | Chat completions (OpenAI-compatible)        | Foundry Tools         |
+| `openai_embeddings`      | Text embeddings (OpenAI-compatible)         | Foundry Tools         |
 
 <!-- START BADGE -->
 <div align="center">

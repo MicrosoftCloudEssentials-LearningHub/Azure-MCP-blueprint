@@ -1,4 +1,4 @@
-# MCP Blueprint (Azure) — Deployment & Configuration Best Practices
+# MCP Blueprint (Azure) <br/> Deployment & Configuration Best Practices - Overview
 
 Costa Rica
 
@@ -61,9 +61,11 @@ Last updated: 2026-03-06
 </details>
 
 <details>
-<summary><strong>Azure OpenAI / “Foundry” (when enabled)</strong></summary>
+<summary><strong>Microsoft Foundry (Azure AI Foundry) (when enabled)</strong></summary>
 
-This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
+> This repo treats **Foundry** (Azure AI Foundry) as the **model endpoint**.
+> The runtime uses an **OpenAI-compatible API surface**, so configuration uses `OPENAI_*` env vars, with `FOUNDRY_*` supported as aliases.
+> Learn more: https://learn.microsoft.com/azure/foundry/what-is-foundry
 
 - `OPENAI_ENDPOINT` *(preferred)* or `FOUNDRY_ENDPOINT` *(alias)*
 - `OPENAI_API_KEY` *(optional)* or `FOUNDRY_API_KEY` *(alias)*
@@ -105,7 +107,7 @@ This repo treats “Foundry” as the Azure OpenAI-compatible endpoint.
 <details>
 <summary><strong>Option A (recommended): Terraform + Azure Container Apps (zero-touch)</strong></summary>
 
-This is the only path in this repo that is currently **end-to-end automated** via Terraform.
+> This is the only path in this repo that is currently **end-to-end automated** via Terraform.
 
 1. Configure [terraform-infrastructure/terraform.tfvars](../terraform-infrastructure/terraform.tfvars)
    - `selected_industry`
@@ -116,17 +118,16 @@ This is the only path in this repo that is currently **end-to-end automated** vi
    - `terraform init`
    - `terraform apply -auto-approve`
 
-Notes:
-
-- The container image is built in Azure using **ACR Tasks** (`az acr build`).
-- The Container App is configured with Key Vault-backed secrets.
+>[!NOTE]
+> - The container image is built in Azure using **ACR Tasks** (`az acr build`).
+> - The Container App is configured with Key Vault-backed secrets.
 
 </details>
 
 <details>
 <summary><strong>Option B: Terraform provisions infra, then deploy code separately (Functions)</strong></summary>
 
-Terraform can provision the Function App + Key Vault + dependent services, but code deployment is best done via CI/CD (or your preferred release process).
+> Terraform can provision the Function App + Key Vault + dependent services, but code deployment is best done via CI/CD (or your preferred release process).
 
 - Set `mcp_deployment_type = "function"` in `terraform.tfvars`.
 - Deploy code using one of:
@@ -162,9 +163,8 @@ Terraform can provision the Function App + Key Vault + dependent services, but c
   - `GET /mcp/prompts`
   - `POST /mcp/execute`
 
-You can also run the built-in validator:
-
-- [scripts/validate-mcp.py](../scripts/validate-mcp.py)
+> [!TIP]
+> You can also run the built-in validator: [scripts/validate-mcp.py](../scripts/validate-mcp.py)
 
 ## Common pitfalls (and how this blueprint avoids them)
 

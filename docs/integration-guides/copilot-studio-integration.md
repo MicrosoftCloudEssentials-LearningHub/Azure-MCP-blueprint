@@ -1,4 +1,4 @@
-# Microsoft Copilot Studio Integration with MCP Server
+# Microsoft Copilot Studio Integration <br/> with MCP Server - Overview
 
 Costa Rica
 
@@ -8,27 +8,19 @@ Costa Rica
 Last updated: 2026-03-06
 
 ----------
-> Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access.
+> Connect your MCP Server to Microsoft Copilot Studio to create low-code/no-code AI agents with enterprise data access. `Perfect for business users and citizen developers.`
 
 <details>
 <summary><strong>Table of contents</strong></summary>
 
-- [Overview](#overview)
 - [What You'll Build](#what-youll-build)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
 - [Advanced Features](#advanced-features)
 - [Industry Templates](#industry-templates)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
 - [Sample Copilot Export](#sample-copilot-export)
-- [Next Steps](#next-steps)
 
 </details>
-
-## Overview
-
-Perfect for business users and citizen developers.
 
 ## What You'll Build
 
@@ -70,9 +62,7 @@ Perfect for business users and citizen developers.
 <details>
 <summary><strong>Step 3: Add MCP Server as Tool</strong></summary>
 
-### Option A (Recommended): MCP onboarding wizard
-
-Copilot Studio supports connecting directly to an MCP server using the **Model Context Protocol** tool type.
+> Option A (Recommended): MCP onboarding wizard:Copilot Studio supports connecting directly to an MCP server using the **Model Context Protocol** tool type.
 
 1. In your Copilot, go to the **Tools** page
 2. Select **Add a tool** → **New tool**
@@ -81,14 +71,11 @@ Copilot Studio supports connecting directly to an MCP server using the **Model C
    - **Server URL**: `https://your-mcp.azurecontainerapps.io/mcp`
    - **Authentication**: None, API key, or OAuth 2.0
 
-Notes:
+> [!NOTE]
+> - Copilot Studio currently supports the **Streamable** transport type for MCP.
+> - This repo’s MCP server exposes a standards-based Streamable endpoint at `POST /mcp` (JSON-RPC).
 
-- Copilot Studio currently supports the **Streamable** transport type for MCP.
-- This repo’s MCP server exposes a standards-based Streamable endpoint at `POST /mcp` (JSON-RPC).
-
-### Option B: Custom connector (MCP Streamable)
-
-If you need to manage the connection via Power Apps, create a custom connector using a minimal OpenAPI schema that points to `POST /mcp` and includes the MCP protocol marker.
+> Option B: Custom connector (MCP Streamable): If you need to manage the connection via Power Apps, create a custom connector using a minimal OpenAPI schema that points to `POST /mcp` and includes the MCP protocol marker.
 
 ```yaml
 swagger: '2.0'
@@ -118,7 +105,7 @@ paths:
 <details>
 <summary><strong>Step 4: Configure Topics with MCP Tools</strong></summary>
 
-### Example: Healthcare Patient Lookup
+> Example: Healthcare Patient Lookup
 
 1. Go to **Topics** tab
 2. Click **+ New topic** → **From blank**
@@ -165,48 +152,23 @@ Node 5: Question - Follow-up
 <details>
 <summary><strong>Step 5: Industry-Specific Topics</strong></summary>
 
-### Healthcare Topics
+> Example topic mappings (Industry → Trigger → MCP tool call)
 
-#### Medication Lookup
-
-- Trigger: "What medications is patient taking?"
-- Action: `cosmos_query_items` → `SELECT c.medications FROM c WHERE c.patientId = '{patientId}'`
-
-#### Allergy Check
-
-- Trigger: "Check patient allergies"
-- Action: `search_documents` with filter on allergies field
-
-### Retail Topics
-
-#### Product Search
-
-- Trigger: "Find product"
-- Action: `search_documents` → search product catalog
-
-#### Inventory Check
-
-- Trigger: "Check stock availability"
-- Action: `cosmos_query_items` → query inventory
-
-### Finance Topics
-
-#### Transaction Search
-
-- Trigger: "Show my transactions"
-- Action: `cosmos_query_items` → filter by account
-
-#### Fraud Alert
-
-- Trigger: "Check for suspicious activity"
-- Action: `cosmos_query_items` → filter by fraud score > 0.7
+| Industry | Topic | Trigger phrase examples | MCP tool | Example action (tool → parameters/query) |
+|---|---|---|---|---|
+| Healthcare | Medication Lookup | “What medications is patient taking?”, “Show meds for {patientId}” | `cosmos_query_items` | `cosmos_query_items` → `SELECT c.medications FROM c WHERE c.patientId = '{patientId}'` |
+| Healthcare | Allergy Check | “Check patient allergies”, “Is {patientId} allergic to {allergy}?” | `search_documents` | `search_documents` → `{"query":"","top":10,"filter":"allergies/any(a: a eq '{allergy}')"}` |
+| Retail | Product Search | “Find product”, “Search {product}”, “Products under $50” | `search_documents` | `search_documents` → `{"query":"{productQuery}","top":10,"filter":null}` |
+| Retail | Inventory Check | “Check stock availability”, “Is SKU {sku} in stock?” | `cosmos_query_items` | `cosmos_query_items` → `SELECT * FROM c WHERE c.sku = '{sku}'` |
+| Finance | Transaction Search | “Show my transactions”, “Transactions last 30 days” | `cosmos_query_items` | `cosmos_query_items` → `SELECT * FROM c WHERE c.accountId = '{accountId}' ORDER BY c.timestamp DESC` |
+| Finance | Fraud Alert | “Check for suspicious activity”, “High fraud scores” | `cosmos_query_items` | `cosmos_query_items` → `SELECT * FROM c WHERE c.fraudScore > 0.7 ORDER BY c.fraudScore DESC` |
 
 </details>
 
 <details>
-### Publish to Demo Website
+<summary><strong>Step 6: Generative Answers (Optional)</strong></summary>
 
-Enable generative responses powered by MCP data:
+> Publish to Demo Website: Enable generative responses powered by MCP data.
 
 1. Go to **Settings** → **Generative AI**
 2. Enable **Generative answers**
@@ -254,14 +216,14 @@ Always maintain data privacy and security.
 <details>
 <summary><strong>Step 8: Publish</strong></summary>
 
-### Publish to Demo Website
+> Publish to Demo Website: 
 
 1. Go to **Publish** tab
 2. Click **Publish**
 3. Select **Demo website**
 4. Share link: `https://your-copilot.powerapps.com/...`
 
-### Publish to Microsoft Teams
+> Publish to Microsoft Teams:
 
 1. Go to **Publish** tab
 2. Click **Publish**
@@ -273,7 +235,7 @@ Always maintain data privacy and security.
 5. **Submit for approval** (if required)
 6. **Install in Teams**
 
-### Embed in Website
+> Embed in Website: 
 
 ```html
 <!DOCTYPE html>
@@ -315,7 +277,7 @@ Always maintain data privacy and security.
 <details>
 <summary><strong>Authentication & Security</strong></summary>
 
-### Azure AD Authentication
+> Azure AD Authentication: 
 
 1. In **Settings** → **Security**
 2. Enable **Authentication**
@@ -325,7 +287,7 @@ Always maintain data privacy and security.
    - Client ID
    - Redirect URI
 
-### Row-Level Security
+> Row-Level Security:
 
 ```yaml
 # In MCP Server, implement user-scoped queries
@@ -365,111 +327,32 @@ def get_user_data(user_id: str, query: str):
 
 ## Industry Templates
 
-<details>
-<summary><strong>Healthcare Copilot</strong></summary>
+> Each row maps a user intent to a specific MCP tool call, what to pass, and what to show.
 
-**Topics:**
+| Industry | Topics (deep dive) | Trigger phrases (examples) | MCP tools used | Example calls (shapes) | What to display back | Notes (design + safety) |
+|---|---|---|---|---|---|---|
+| Healthcare | - Patient Lookup<br/>- Medication History<br/>- Appointment Scheduling<br/>- Lab Results Inquiry<br/>- Allergy Checker | - “Find patient”, “Find patients with diabetes”<br/>- “Show medications for {patientId}”<br/>- “Book with Dr. Smith next week”<br/>- “Show latest labs / HbA1c”<br/>- “Is {patientId} allergic to penicillin?” | - `search_documents`<br/>- `cosmos_query_items`<br/>- `search_semantic`<br/>- `openai_chat_completion` | - Search: `{"query":"diabetes","top":5,"filter":null}`<br/>- Cosmos: `{"query":"SELECT c.medications FROM c WHERE c.patientId = '{patientId}'"}`<br/>- Semantic: `{"query":"latest lab results HbA1c for {patientId}","top":5}`<br/>- Foundry: `{"messages":[...],"model":"gpt-4o"}` | - Patient match list (name, patientId, lastVisitDate)<br/>- Medication/allergy fields only (minimal data)<br/>- Lab snippets + dates<br/>- Clarifying questions for scheduling | - Prefer patientId over names for precision<br/>- Keep outputs descriptive (not prescriptive medical advice)<br/>- Avoid returning entire patient record unless required |
+| Retail | - Product Search<br/>- Inventory Status<br/>- Order Tracking<br/>- Loyalty Points<br/>- Recommendations | - “Search headphones”, “Laptops under $1000”<br/>- “Is SKU {sku} in stock?”<br/>- “Track order {orderId}”<br/>- “My loyalty points”<br/>- “Recommend products like {productName}” | - `search_documents`<br/>- `cosmos_query_items`<br/>- `openai_chat_completion` | - Search: `{"query":"headphones","top":10,"filter":null}`<br/>- Cosmos: `{"query":"SELECT * FROM c WHERE c.transactionId = '{orderId}'"}`<br/>- Foundry: `{"messages":[...],"model":"gpt-4o"}` | - Product list (name/category/price if indexed)<br/>- Availability/stock fields (if present)<br/>- Order status + last update<br/>- Loyalty point balance<br/>- Short recommendation list | - Confirm identifier formats (orderId vs transactionId)<br/>- For recommendations: Search first (grounding) then summarize with Foundry<br/>- Minimize PII (use customerId, not email) |
+| Finance | - Account Balance<br/>- Transaction History<br/>- Fraud Alerts<br/>- Payment Processing<br/>- Financial Insights | - “Balance for account {accountId}”<br/>- “Transactions last 30 days”<br/>- “Suspicious activity?”<br/>- “Pay my bill / send $50”<br/>- “Spending insights” | - `cosmos_query_items`<br/>- `openai_chat_completion` | - Cosmos: `{"query":"SELECT * FROM c WHERE c.accountId = '{accountId}' AND c.timestamp >= '{isoDate}' ORDER BY c.timestamp DESC"}`<br/>- Fraud: `{"query":"SELECT * FROM c WHERE c.fraudScore > 0.7 ORDER BY c.fraudScore DESC"}`<br/>- Foundry: `{"messages":[...],"model":"gpt-4o"}` | - Balance + currency (if stored)<br/>- Recent transactions (amount/merchant/time)<br/>- Flagged transactions + fraudScore<br/>- Confirmation step for payments<br/>- Category insights + next steps | - Present fraud as a signal, not a final determination<br/>- Only simulate payments unless you have a real backend<br/>- Best pattern for insights: Cosmos query → Foundry summary |
 
-1. Patient Lookup
-2. Medication History
-3. Appointment Scheduling
-4. Lab Results Inquiry
-5. Allergy Checker
+> [!IMPORTANT]
+> Template data is synthetic but can contain **PII-like fields** (names/emails/phones/addresses; DOB in some industries). Avoid logging tool outputs and apply least-privilege access.
 
-**Sample Conversation:**
-
-```
-User: Find patients with diabetes
-Copilot: [Calls search_documents]
-        I found 342 patients with diabetes. Here are the top matches:
-        - John Smith (ID: P12345) - Last visit: 2024-01-15
-        - Sarah Johnson (ID: P67890) - Last visit: 2024-01-20
-        
-User: Show me John Smith's medications
-Copilot: [Calls cosmos_query_items]
-        John Smith is currently taking:
-        - Metformin 500mg - Twice daily
-        - Lisinopril 10mg - Once daily
-        - Aspirin 81mg - Once daily
-```
-
-</details>
-
-<details>
-<summary><strong>Retail Copilot</strong></summary>
-
-**Topics:**
-
-1. Product Search
-2. Inventory Status
-3. Order Tracking
-4. Loyalty Points
-5. Recommendations
-
-</details>
-
-<details>
-<summary><strong>Finance Copilot</strong></summary>
-
-**Topics:**
-
-1. Account Balance
-2. Transaction History
-3. Fraud Alerts
-4. Payment Processing
-5. Financial Insights
-
-</details>
-
-## Best Practices
-
-1. **Keep topics focused**: One topic = one task
-2. **Use fallback**: Configure fallback topic for unhandled queries
-3. **Test thoroughly**: Test all conversation paths
-4. **Monitor performance**: Review analytics weekly
-5. **Iterate**: Update based on user feedback
-
-## Troubleshooting
-
-<details>
-<summary><strong>MCP Connector Issues</strong></summary>
-
-**Problem**: Connector fails to connect
-
-**Solution**:
-
-- Verify MCP endpoint URL is public
-- Check CORS settings on MCP server
-- Test endpoint with Postman first
-
-</details>
-
-<details>
-<summary><strong>Tool Call Failures</strong></summary>
-
-**Problem**: Tool returns error
-
-**Solution**:
-
-- Validate argument schema
-- Check MCP server logs
-- Verify Azure service connectivity
-
-</details>
+| Operations area | Symptom / goal | What to check | Fix |
+|---|---|---|---|
+| Topic design | Topic tries to do too much | One topic is handling multiple intents | Split into multiple topics; keep each topic to a single task. |
+| Fallback | Users ask unhandled questions | No fallback topic / poor trigger phrases | Add a fallback topic; expand trigger phrases; route to a “help me choose” question. |
+| Testing | Tools don’t fire in Test pane | Action node not reached; variables not set | Add explicit questions to capture inputs; verify the tool name and JSON shape; save tool response into a variable. |
+| Monitoring | Need usage + quality visibility | No review cadence | Review Copilot Studio analytics weekly; correlate with MCP server logs (App Insights / platform logs). |
+| MCP connector | Connector fails to connect | Endpoint not public; auth mismatch; CORS; wrong URL | Verify the MCP URL is reachable and points to `/mcp`; validate auth settings (none/API key/OAuth); configure allowed origins if enforced by the server. |
+| Tool call failures | Tool returns an error | Bad arguments; missing dependent Azure service config | Validate against the tool’s input schema; check MCP server logs; verify Cosmos/Search/Foundry endpoints and credentials/managed identity permissions. |
 
 ## Sample Copilot Export
 
-See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
-
-- Healthcare Assistant (.zip export)
-- Retail Assistant (.zip export)
-- Finance Assistant (.zip export)
-
-## Next Steps
-
-- [Custom App Integration](./custom-app-integration.md)
-- [Azure AI Foundry Integration](./azure-ai-foundry-integration.md)
-- [Pre-built Agent Samples](../../agent-samples/README.md)
+> See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
+> - Healthcare Assistant (.zip export)
+> - Retail Assistant (.zip export)
+> - Finance Assistant (.zip export)
 
 <!-- START BADGE -->
 <div align="center">

@@ -8,7 +8,7 @@ Costa Rica
 Last updated: 2026-03-06
 
 ----------
-> Retail-focused sample agent that calls MCP tools over HTTP. It works best when Azure AI Search is enabled (uses `search_semantic` / `search_documents`). If Azure OpenAI is enabled on the MCP server, it will also use `openai_chat_completion` for routing/summaries.
+> Retail-focused sample agent that calls MCP tools over HTTP. It works best when Azure AI Search is enabled (uses `search_semantic` / `search_documents`). If Foundry (Azure AI Foundry model endpoint) is enabled on the MCP server, it will also use `openai_chat_completion` for routing/summaries.
 
 
 <details>

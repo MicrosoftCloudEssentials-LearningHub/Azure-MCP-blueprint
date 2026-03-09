@@ -1,4 +1,4 @@
-# Azure AI Foundry Integration with MCP Server
+# Azure AI Foundry Integration <br/> with MCP Server - Overview 
 
 Costa Rica
 
@@ -8,12 +8,12 @@ Costa Rica
 Last updated: 2026-03-06
 
 ----------
-> This guide demonstrates how to integrate your MCP Server with Azure AI Foundry to build sophisticated multi-agent AI applications.
+
+> This guide demonstrates how to integrate your MCP Server with Azure AI Foundry to build sophisticated multi-agent AI applications. Includes model routing, agent orchestration, and agentic workflows.
 
 <details>
 <summary><strong>Table of contents</strong></summary>
 
-- [Overview](#overview)
 - [Architecture Pattern](#architecture-pattern)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
@@ -22,13 +22,8 @@ Last updated: 2026-03-06
 - [Deployment to Azure](#deployment-to-azure)
 - [Best Practices](#best-practices)
 - [Complete Example](#complete-example)
-- [Next Steps](#next-steps)
 
 </details>
-
-## Overview
-
-Includes model routing, agent orchestration, and agentic workflows.
 
 ## Architecture Pattern
 
@@ -48,7 +43,7 @@ User Request → Intent Router → Specialized Agents → MCP Tools → Azure Se
 
 - Azure AI Foundry project created
 - MCP Server deployed (get endpoint URL)
-- Azure OpenAI models deployed (gpt-4o, gpt-4o-mini)
+- Models deployed in Azure AI Foundry (e.g., gpt-4o, gpt-4o-mini)
 - Azure CLI installed and authenticated
 
 ## Quick Start
@@ -115,7 +110,7 @@ class MCPMultiAgentOrchestrator:
             role: Agent's domain (e.g., "Healthcare Specialist", "Inventory Manager")
             instructions: System instructions for the agent
             mcp_tools: List of MCP tool names this agent can use
-            model: Azure OpenAI model deployment name
+            model: Model deployment name in Azure AI Foundry (OpenAI-compatible)
         
         Returns:
             Agent ID (asst_*)
@@ -573,13 +568,7 @@ kv_client.set_secret("MCP-Endpoint", "https://your-mcp.azurecontainerapps.io")
 
 ## Complete Example
 
-See [`/agent-samples/healthcare-multi-agent/`](../../agent-samples/healthcare-multi-agent/) for full implementation.
-
-## Next Steps
-
-- [Copilot Studio Integration](./copilot-studio-integration.md)
-- [Pre-built Agent Samples](../../agent-samples/README.md)
-- [Custom App Integration](./custom-app-integration.md)
+> See [`/agent-samples/healthcare-multi-agent/`](../../agent-samples/healthcare-multi-agent/) for full implementation example.
 
 <!-- START BADGE -->
 <div align="center">
