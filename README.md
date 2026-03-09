@@ -12,7 +12,7 @@ Last updated: 2026-03-06
 > MCP is about `structured behavior, access control, and responsibilities` from the AI's perspective, and we expose it (often via HTTP) using whatever hosting option fits best.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/f215d752-4212-4b2a-a0df-7018ada9a607" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>
+  <img width="700" src="https://github.com/user-attachments/assets/f215d752-4212-4b2a-a0df-7018ada9a607" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>
 </div>
 
 > [!TIP]
@@ -57,7 +57,9 @@ mcp_deployment_type = "container-app"  # Options: container-app, function, app-s
 
 > **MCP (Model Context Protocol)** is a **structured contract** between an AI client (like Copilot Studio or Azure AI Foundry) and an external service (your MCP server).
 
-<img width="750" alt="image" src="https://github.com/user-attachments/assets/c49b002d-e367-4ee6-b0cf-62c413259e33" />
+<div align="center">
+  <img width="700" src="https://github.com/user-attachments/assets/c49b002d-e367-4ee6-b0cf-62c413259e33" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>
+</div>
 
 It defines:
 
