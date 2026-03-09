@@ -11,6 +11,10 @@ Last updated: 2026-03-06
 
 > MCP is about `structured behavior, access control, and responsibilities` from the AI's perspective, and we expose it (often via HTTP) using whatever hosting option fits best.
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/f215d752-4212-4b2a-a0df-7018ada9a607" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>
+</div>
+
 > [!TIP]
 > You can think of MCP as:
 >
