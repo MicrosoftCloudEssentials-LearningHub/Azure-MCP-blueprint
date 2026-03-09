@@ -1,4 +1,4 @@
-# Industry Templates (MCP Blueprint)
+# Industry Templates (MCP Blueprint) - Overview 
 
 Costa Rica
 
@@ -9,9 +9,7 @@ Last updated: 2026-03-08
 
 ----------
 
-> Industry templates are **the contract** that keeps Terraform, sample data, and the MCP server aligned.
->
-> Each folder under `industry-templates/<industry>/` defines:
+> Industry templates are **the contract** that keeps Terraform, sample data, and the MCP server aligned. Each folder under `industry-templates/<industry>/` defines:
 > - **Cosmos DB** database/container names + partition key
 > - **Azure AI Search** index name + fields
 > - **Example queries** (tool + parameters)
