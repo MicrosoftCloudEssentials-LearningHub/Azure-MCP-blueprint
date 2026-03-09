@@ -11,6 +11,18 @@ Last updated: 2026-03-06
 
 > MCP is about `structured behavior, access control, and responsibilities` from the AI's perspective, and we expose it (often via HTTP) using whatever hosting option fits best.
 
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [What MCP Really Is?](#what-mcp-really-is)
+- [What gets deployed](#what-gets-deployed)
+- [Industry Templates (10 Available)](#industry-templates-10-available)
+- [Features](#features)
+- [Pre-Built AI Agent Samples](#pre-built-ai-agent-samples)
+- [MCP Tools Available](#mcp-tools-available)
+
+</details>
+
 <div align="center">
   <img width="700" src="https://github.com/user-attachments/assets/f215d752-4212-4b2a-a0df-7018ada9a607" alt="Centered Image" style="border: 2px solid #4CAF50; border-radius: 5px; padding: 5px;"/>
 </div>
@@ -32,18 +44,6 @@ Last updated: 2026-03-06
 
 > [!NOTE]
 > Configuration Options: Customize, and choose your hosting service by editing [terraform.tfvars](./terraform-infrastructure/terraform.tfvars).
-
-<details>
-<summary><strong>Table of contents</strong></summary>
-
-- [What MCP Really Is?](#what-mcp-really-is)
-- [What gets deployed](#what-gets-deployed)
-- [Industry Templates (10 Available)](#industry-templates-10-available)
-- [Features](#features)
-- [Pre-Built AI Agent Samples](#pre-built-ai-agent-samples)
-- [MCP Tools Available](#mcp-tools-available)
-
-</details>
 
 ```hcl
 # Choose your industry template
