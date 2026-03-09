@@ -493,11 +493,11 @@ Each template includes:
 <details>
 <summary><b>Option 1: Custom Applications (Developers)</b> (Click to expand)</summary>
 
-Build AI-powered applications with direct MCP SDK integration.
+> Build AI-powered applications with direct MCP SDK integration.
 
-**Perfect for**: Custom web apps, mobile apps, enterprise systems
-
-**Guide**: [Custom App Integration](docs/integration-guides/custom-app-integration.md)
+> [!TIP]
+> - **Perfect for**: Custom web apps, mobile apps, enterprise systems
+> - **Guide**: [Custom App Integration](docs/integration-guides/custom-app-integration.md)
 
 **Features**:
 
@@ -512,11 +512,11 @@ Build AI-powered applications with direct MCP SDK integration.
 <details>
 <summary><b>Option 2: Azure AI Foundry (Data Scientists)</b> (Click to expand)</summary>
 
-Create sophisticated multi-agent systems with model routing.
+> Create sophisticated multi-agent systems with model routing.
 
-**Perfect for**: Complex AI workflows, multi-agent orchestration, advanced reasoning
-
-**Guide**: [Azure AI Foundry Integration](docs/integration-guides/azure-ai-foundry-integration.md)
+> [!TIP]
+> - **Perfect for**: Complex AI workflows, multi-agent orchestration, advanced reasoning
+> - **Guide**: [Azure AI Foundry Integration](docs/integration-guides/azure-ai-foundry-integration.md)
 
 **Features**:
 
@@ -531,11 +531,11 @@ Create sophisticated multi-agent systems with model routing.
 <details>
 <summary><b>Option 3: Copilot Studio (Business Users)</b> (Click to expand)</summary>
 
-Low-code/no-code AI chatbots with enterprise data access.
+> Low-code/no-code AI chatbots with enterprise data access.
 
-**Perfect for**: Teams deployment, customer service bots, internal tools
-
-**Guide**: [Copilot Studio Integration](docs/integration-guides/copilot-studio-integration.md)
+> [!TIP]
+> - **Perfect for**: Teams deployment, customer service bots, internal tools
+> - **Guide**: [Copilot Studio Integration](docs/integration-guides/copilot-studio-integration.md)
 
 **Features**:
 
