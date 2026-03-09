@@ -53,7 +53,9 @@ Last updated: 2026-03-06
 - **Minimal dependencies**: `requests` + `python-dotenv`
 
 > Patterns: <br/>
+>
 > - Lightweight HTTP samples (most folders): 
+>
   ```
   User
       ↓
@@ -81,7 +83,6 @@ Last updated: 2026-03-06
 - [Custom App Integration](../docs/integration-guides/custom-app-integration.md)
 - [Azure AI Foundry Integration](../docs/integration-guides/azure-ai-foundry-integration.md)
 - [Copilot Studio Integration](../docs/integration-guides/copilot-studio-integration.md)
-
 
 <!-- START BADGE -->
 <div align="center">

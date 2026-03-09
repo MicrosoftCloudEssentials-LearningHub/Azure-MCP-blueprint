@@ -300,7 +300,6 @@ async def health():
 
 </details>
 
-
 <details>
 <summary><strong>Node.js/TypeScript Integration</strong></summary>
 
@@ -456,6 +455,7 @@ async def robust_tool_call(mcp: MCPClient, tool_name: str, args: dict, retries=3
 ## Sample Applications
 
 > See [`/agent-samples`](../../agent-samples) directory for complete examples:
+>
 > - Healthcare Patient Assistant
 > - Retail Product Recommendation Engine
 > - Financial Transaction Monitor

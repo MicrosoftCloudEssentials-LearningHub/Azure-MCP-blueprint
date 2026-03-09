@@ -72,6 +72,7 @@ Last updated: 2026-03-09
    - **Authentication**: None, API key, or OAuth 2.0
 
 > [!NOTE]
+>
 > - Copilot Studio currently supports the **Streamable** transport type for MCP.
 > - This repo’s MCP server exposes a standards-based Streamable endpoint at `POST /mcp` (JSON-RPC).
 
@@ -350,6 +351,7 @@ def get_user_data(user_id: str, query: str):
 ## Sample Copilot Export
 
 > See [`/agent-samples/copilot-studio/`](../../agent-samples/copilot-studio/) for:
+>
 > - Healthcare Assistant (.zip export)
 > - Retail Assistant (.zip export)
 > - Finance Assistant (.zip export)

@@ -65,7 +65,7 @@ Last updated: 2026-03-09
 
 > This repo treats **Foundry** (Azure AI Foundry) as the **model endpoint**.
 > The runtime uses an **OpenAI-compatible API surface**, so configuration uses `OPENAI_*` env vars, with `FOUNDRY_*` supported as aliases.
-> Learn more: https://learn.microsoft.com/azure/foundry/what-is-foundry
+> Learn more: <https://learn.microsoft.com/azure/foundry/what-is-foundry>
 
 - `OPENAI_ENDPOINT` *(preferred)* or `FOUNDRY_ENDPOINT` *(alias)*
 - `OPENAI_API_KEY` *(optional)* or `FOUNDRY_API_KEY` *(alias)*
@@ -119,6 +119,7 @@ Last updated: 2026-03-09
    - `terraform apply -auto-approve`
 
 >[!NOTE]
+>
 > - The container image is built in Azure using **ACR Tasks** (`az acr build`).
 > - The Container App is configured with Key Vault-backed secrets.
 
