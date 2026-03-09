@@ -1,111 +1,91 @@
-# Industry Sample Templates - Overview
+# Industry Templates (MCP Blueprint)
 
 Costa Rica
 
 [![GitHub](https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff)](https://github.com/)
 [brown9804](https://github.com/brown9804)
 
-Last updated: 2026-03-06
+Last updated: 2026-03-08
 
 ----------
 
-> This directory contains pre-configured industry templates for the MCP Blueprint. Each template includes:
+> Industry templates are **the contract** that keeps Terraform, sample data, and the MCP server aligned.
+>
+> Each folder under `industry-templates/<industry>/` defines:
+> - **Cosmos DB** database/container names + partition key
+> - **Azure AI Search** index name + fields
+> - **Example queries** (tool + parameters)
+> - **Default sample record count** (typically 100,000)
 
 <details>
 <summary><strong>Table of contents</strong></summary>
 
-- [Available Templates](#available-templates)
+- [What’s in a template](#whats-in-a-template)
+- [How templates are used](#how-templates-are-used)
+- [Available templates](#available-templates)
+- [Synthetic data and PII-like fields](#synthetic-data-and-pii-like-fields)
 
 </details>
 
-- **50,000 sample records** with realistic, industry-specific data
-- **10 example queries** demonstrating common use cases  
-- **Cosmos DB schema** with partition key strategy
-- **Azure AI Search index** with optimized fields
-- **MCP tool configurations** tailored to industry needs
+## What’s in a template
 
-## Available Templates
+> Each industry folder contains exactly two files:
 
-<details>
-<summary><strong>Healthcare</strong></summary>
+- `schema.json`
+  - **Identity**: `industry`, `display_name`, `description`, optional `icon`
+  - **Cosmos DB**: `cosmos_db.database`, `cosmos_db.container`, `cosmos_db.partition_key`, and a lightweight `cosmos_db.schema` shape
+  - **Azure AI Search**: `search_index.name` and `search_index.fields` (some templates also include `semantic_config`)
+  - **Suggested MCP tools**: `mcp_tools` (what the agent is expected to call in this scenario)
+  - **Sample size**: either `sample_data_size` or `sample_data_config.record_count`
 
-- **File**: `healthcare/`
-- **Use Case**: Medical records management, patient care coordination, clinical research
-- **Partition Key**: `/patientId`
-- **Cosmos DB Container**: `patient-records`  
-- **Search Index**: `healthcare-index`
+- `queries.json`
+  - `example_queries[]` list where each entry includes:
+    - `tool` (e.g., `cosmos_query_items`, `search_documents`, `search_semantic`, `openai_chat_completion`)
+    - `parameters` (the exact JSON arguments to pass)
+    - `expected_use_case` (why the query exists)
 
-**Data Schema**:
+## How templates are used
 
-- Patient demographics (name, DOB (date of birth), gender, blood type)
-- Medical history and chronic conditions
-- Medications and allergies
-- Insurance and emergency contacts
-- Lab results and vaccinations
+> Templates are consumed in three main places:
 
-**Example Queries**:
+1. **Terraform provisioning**
+   - Terraform reads the selected industry from `selected_industry` in [terraform-infrastructure/terraform.tfvars](../terraform-infrastructure/terraform.tfvars).
+   - It loads the matching template from `industry-templates/<industry>/schema.json` to keep names and schema consistent.
 
-- Find patients with specific conditions (diabetes, hypertension)
-- Search by blood type for emergency scenarios
-- Query patients by physician or insurance provider
-- Semantic search for medical conditions
-- AI-assisted medical summaries
+2. **The MCP server (runtime configuration)**
+   - Deployments set `SELECTED_INDUSTRY`, and the app uses it to find the correct `schema.json` / `queries.json`.
 
-</details>
+3. **Sample data generation and upload scripts (optional)**
+   - Generate local JSON: `python scripts/generate_sample_data.py --industry <industry> [--count N]`
+     - Note: `healthcare`, `retail`, and `finance` use custom generators; other industries are generated from `cosmos_db.schema`.
+   - Upload to Cosmos DB + Azure AI Search (key-based script):
+     - Set `SELECTED_INDUSTRY` (optional), `COSMOS_ENDPOINT`, `COSMOS_KEY`, `SEARCH_ENDPOINT`, and optionally `SEARCH_KEY`.
+     - Run: `python scripts/upload_sample_data.py`
 
-<details>
-<summary><strong>Retail & E-Commerce</strong></summary>
+## Available templates
 
-- **File**: `retail/`
-- **Use Case**: Transaction analytics, customer insights, inventory management
-- **Partition Key**: `/customerId`
-- **Cosmos DB Container**: `transactions`  
-- **Search Index**: `retail-index`
+> All templates in this repo default to **100,000 records**.
 
-**Data Schema**:
+| Industry (folder) | Cosmos DB (database / container) | Partition key | Azure AI Search index | Default records |
+|---|---|---|---|---:|
+| Education (education) | `education-mcp` / `student-records` | `/studentId` | `education-index` | 100,000 |
+| Energy (energy) | `energy-mcp` / `meter-readings` | `/meterId` | `energy-index` | 100,000 |
+| Finance (finance) | `finance-mcp` / `transactions` | `/accountId` | `finance-index` | 100,000 |
+| Healthcare (healthcare) | `healthcare-mcp` / `patient-records` | `/patientId` | `healthcare-index` | 100,000 |
+| Hospitality (hospitality) | `hospitality-mcp` / `reservations` | `/reservationId` | `hospitality-index` | 100,000 |
+| Insurance (insurance) | `insurance-mcp` / `claims-records` | `/claimId` | `insurance-index` | 100,000 |
+| Logistics (logistics) | `logistics-mcp` / `shipment-tracking` | `/shipmentId` | `logistics-index` | 100,000 |
+| Manufacturing (manufacturing) | `manufacturing-mcp` / `equipment-telemetry` | `/equipmentId` | `manufacturing-index` | 100,000 |
+| Real Estate (realestate) | `realestate-mcp` / `property-listings` | `/propertyId` | `realestate-index` | 100,000 |
+| Retail (retail) | `retail-mcp` / `transactions` | `/customerId` | `retail-index` | 100,000 |
 
-- Transaction details (ID, date, amount, status)
-- Customer information and loyalty points
-- Product items with categories and SKUs
-- Shipping address and store location
-- Payment method and promotion codes
+## Synthetic data and PII-like fields
 
-**Example Queries**:
+> The sample data generated for these templates is **synthetic** (not sourced from real people).
 
-- High-value transaction analysis (>$500)
-- Product category performance tracking
-- Customer purchase history retrieval
-- Seasonal/promotional campaign effectiveness
-- Loyalty program member identification
-
-</details>
-
-<details>
-<summary><strong>Financial Services</strong></summary>
-
-- **File**: `finance/`
-- **Use Case**: Transaction monitoring, fraud detection, account management
-- **Partition Key**: `/accountId`
-- **Cosmos DB Container**: `transactions`  
-- **Search Index**: `finance-index`
-
-**Data Schema**:
-
-- Transaction details (type, amount, timestamp)
-- Account and customer information
-- Merchant name and category
-- Geographic location data
-- Fraud score and risk indicators
-
-**Example Queries**:
-
-- Fraud detection (high fraud scores)
-- AML compliance (large withdrawals >$10K)
-- International transaction monitoring
-- Spending pattern analysis by category
-- AI-powered financial advice generation
-
-</details>
+> [!IMPORTANT]
+> Even though it is synthetic, it includes **PII-like fields** (names, emails, phone numbers, addresses; and DOB in some industries).
+> Treat it as sensitive for logging, sharing, and security/compliance testing.
 
 <!-- START BADGE -->
 <div align="center">
